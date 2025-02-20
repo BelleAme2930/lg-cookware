@@ -7,17 +7,20 @@ import InputError from "@/Components/InputError.jsx";
 import Textarea from "@/Components/Textarea.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 
-const CategoryForm = (category = null) => {
-    const {data, setData, post, processing, reset, errors, isDirty} = useForm({
+const CategoryForm = ({category = null}) => {
+    const {data, setData, post, patch, processing, reset, errors, isDirty} = useForm({
         name: category.name ?? '',
         description: category.description ?? '',
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('categories.store'), {
-            onSuccess: () => reset()
-        });
+        category ? patch(route('categories.update', category), {
+                onSuccess: () => reset()
+            }) :
+            post(route('categories.store'), {
+                onSuccess: () => reset()
+            });
     };
 
     return (

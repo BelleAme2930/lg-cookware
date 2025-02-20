@@ -56,7 +56,7 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $category)
+    public function edit(Category $category)
     {
         return Inertia::render('Category/Edit', [
             'category' => CategoryResource::make($category)->resolve(),
