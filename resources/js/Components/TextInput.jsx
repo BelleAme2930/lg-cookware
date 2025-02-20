@@ -22,7 +22,7 @@ export default forwardRef(function TextInput(
             max={max}
             type={type}
             className={
-                'w-full rounded-sm border-gray-300 !py-1.5 shadow-sm focus:border-primary-500 focus:ring-primary-500 ' +
+                'w-full rounded-sm border-gray-300 !py-1.5 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500 ' +
                 className
             }
             ref={localRef}

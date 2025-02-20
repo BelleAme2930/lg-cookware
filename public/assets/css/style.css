@@ -7,3 +7,32 @@
 .ezHLKS:focus{
     --tw-ring-color: red !important;
 }
+
+.datatable div{
+    font-size: 14px;
+}
+.bpcekY svg{
+    display: none !important;
+}
+select:focus {
+    --tw-ring-color: #e4023b !important;
+}
+
+.react-select__input{
+    box-shadow: none !important;
+}
+.add-items-menu .absolute{
+    left: 0;
+}
+select:focus{
+    border-color: #e4023b !important;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
