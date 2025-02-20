@@ -3,7 +3,7 @@ import DataTable from "react-data-table-component";
 import TextInput from "@/Components/TextInput.jsx";
 import Title from "@/Components/Title.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
-import {FaDatabase, FaThumbsDown} from "react-icons/fa";
+import { FaDatabase, FaThumbsDown } from "react-icons/fa";
 
 const CustomDataTable = ({ columns, data, title }) => {
     const [filterText, setFilterText] = useState("");
@@ -16,22 +16,38 @@ const CustomDataTable = ({ columns, data, title }) => {
 
     return (
         <ShadowBox>
-            <div className='flex items-center justify-between gap-2 mb-2'>
+            <div className='flex items-center justify-between gap-4 mb-4 p-4 bg-gray-100 rounded-lg'>
                 <Title title={title} />
                 <TextInput
                     type="text"
                     placeholder="Search..."
                     onChange={(e) => setFilterText(e.target.value)}
-                    className='max-w-72'
+                    className='max-w-72 border border-gray-300 rounded-lg px-3 py-2 shadow-sm focus:border-primary-500 focus:ring-primary-500'
                 />
             </div>
             <DataTable
-                columns={columns}
+                columns={columns.map(col => ({ ...col, sortable: false }))}
                 data={filteredData}
                 pagination
                 highlightOnHover
                 responsive
                 striped
+                className='rounded-lg shadow-sm'
+                customStyles={{
+                    headCells: {
+                        style: {
+                            backgroundColor: "#f3f4f6",
+                            fontWeight: "bold",
+                            color: "#374151",
+                            padding: "12px",
+                        },
+                    },
+                    rows: {
+                        style: {
+                            minHeight: "48px",
+                        },
+                    },
+                }}
                 noDataComponent={<div className='mt-2 text-md text-primary-500'>No records found.</div>}
             />
         </ShadowBox>
