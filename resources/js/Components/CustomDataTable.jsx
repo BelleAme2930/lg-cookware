@@ -5,12 +5,12 @@ import Title from "@/Components/Title.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 import { FaDatabase, FaThumbsDown } from "react-icons/fa";
 
-const CustomDataTable = ({ columns, data, title }) => {
+const CustomDataTable = ({ columns, data, title, filterColumns = [] }) => {
     const [filterText, setFilterText] = useState("");
 
     const filteredData = data.filter((row) =>
-        Object.values(row).some((value) =>
-            value?.toString().toLowerCase().includes(filterText.toLowerCase())
+        filterColumns.some((colKey) =>
+            row[colKey]?.toString().toLowerCase().includes(filterText.toLowerCase())
         )
     );
 

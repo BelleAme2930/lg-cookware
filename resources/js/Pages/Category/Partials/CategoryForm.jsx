@@ -9,8 +9,8 @@ import ShadowBox from "@/Components/ShadowBox.jsx";
 
 const CategoryForm = ({category = null}) => {
     const {data, setData, post, patch, processing, reset, errors, isDirty} = useForm({
-        name: category.name ?? '',
-        description: category.description ?? '',
+        name: category?.name ?? '',
+        description: category?.description ?? '',
     });
 
     const handleSubmit = (e) => {
