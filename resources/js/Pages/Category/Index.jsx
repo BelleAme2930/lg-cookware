@@ -1,20 +1,30 @@
-import React from 'react';
+import React from "react";
 import {Head} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+import CustomDataTable from "@/Components/CustomDataTable.jsx";
+import Title from "@/Components/Title.jsx";
 
-const Index = () => {
+const Index = ({categories}) => {
+    const columns = [
+        {name: "ID", selector: (row) => row.id, sortable: true},
+        {name: "Name", selector: (row) => row.name, sortable: true},
+        {name: "Created At", selector: (row) => row.created_at, sortable: true},
+    ];
+
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Categories
-                </h2>
+                <Title title='Categories List'/>
             }
         >
-            <Head title="Categories" />
-        <div>
-            Categories Index Page
-        </div>
+            <Head title="Categories"/>
+            <div className="p-6 bg-gray-100">
+                <CustomDataTable
+                    columns={columns}
+                    data={categories}
+                    title="Categories List"
+                />
+            </div>
         </AuthenticatedLayout>
     );
 };

@@ -170,13 +170,13 @@ export default function AuthenticatedLayout({ header, children }) {
 
             {header && (
                 <header className="bg-white shadow">
-                    <div className="mx-auto max-w-full px-4 py-6 sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-full px-4 py-4 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>
             )}
 
-            <main>{children}</main>
+            <main className='mx-auto max-w-full sm:px-6 lg:px-8 py-4'>{children}</main>
         </div>
     );
 }

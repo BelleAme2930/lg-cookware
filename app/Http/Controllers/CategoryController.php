@@ -14,7 +14,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Category/Index');
+        $categories = Category::all();
+        return Inertia::render('Category/Index', [
+            'categories' => CategoryResource::collection($categories)->resolve(),
+        ]);
     }
 
     /**
