@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('accounts', AccountController::class);
+    Route::resource('expenses', ExpenseController::class);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
