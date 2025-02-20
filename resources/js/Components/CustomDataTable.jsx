@@ -3,7 +3,6 @@ import DataTable from "react-data-table-component";
 import TextInput from "@/Components/TextInput.jsx";
 import Title from "@/Components/Title.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
-import { FaDatabase, FaThumbsDown } from "react-icons/fa";
 
 const CustomDataTable = ({ columns, data, title, filterColumns = [] }) => {
     const [filterText, setFilterText] = useState("");

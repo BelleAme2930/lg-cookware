@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from "@inertiajs/react";
 
 const IconButton = ({ onClick, type = 'button', icon, className = '' }) => {
     return (
