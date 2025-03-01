@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('accounts', AccountController::class);
     Route::resource('expenses', ExpenseController::class);
     Route::resource('suppliers', SupplierController::class);
+    Route::resource('customers', CustomerController::class);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -2,7 +2,7 @@ import React from 'react';
 import Title from "@/Components/Title.jsx";
 import {Head} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
-import SupplierForm from "@/Pages/Supplier/Partials/SupplierForm.jsx";
+import CustomerForm from "@/Pages/Customer/Partials/CustomerForm.jsx";
 import {FaArrowLeft} from "react-icons/fa";
 import LinkButton from "@/Components/LinkButton.jsx";
 
@@ -11,15 +11,15 @@ const Create = () => {
         <AuthenticatedLayout
             header={
                 <div className='flex justify-between items-center'>
-                    <Title title='Create New Supplier'/>
-                    <LinkButton href={route('suppliers.index')} icon={<FaArrowLeft/>}>
+                    <Title title='Create New Customer'/>
+                    <LinkButton href={route('customers.index')} icon={<FaArrowLeft/>}>
                         Back to List
                     </LinkButton>
                 </div>
             }
         >
-            <Head title="Suppliers"/>
-            <SupplierForm />
+            <Head title="Customers"/>
+            <CustomerForm />
         </AuthenticatedLayout>
     );
 };
