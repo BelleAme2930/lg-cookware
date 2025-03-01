@@ -48,6 +48,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Expenses
                                 </NavLink>
+                                <NavLink
+                                    href={route('suppliers.index')}
+                                    active={route().current('suppliers.index')}
+                                >
+                                    Suppliers
+                                </NavLink>
                             </div>
                         </div>
 

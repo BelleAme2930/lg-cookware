@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
+use App\Http\Resources\SupplierResource;
+use App\Models\Supplier;
+use Inertia\Inertia;
+
+class SupplierController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $suppliers = Supplier::all();
+        return Inertia::render('Supplier/Index', [
+            'suppliers' => SupplierResource::collection($suppliers)->resolve(),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('Supplier/Create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreSupplierRequest $request)
+    {
+        Supplier::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'opening_balance' => $request->opening_balance,
+            'current_balance' => $request->opening_balance,
+            'status' => true,
+        ]);
+
+        return redirect()->route('suppliers.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Supplier $supplier)
+    {
+        return Inertia::render('Supplier/Show', [
+            'supplier' => SupplierResource::make($supplier)->resolve(),
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Supplier $supplier)
+    {
+        return Inertia::render('Supplier/Edit', [
+            'supplier' => SupplierResource::make($supplier)->resolve(),
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateSupplierRequest $request, Supplier $supplier)
+    {
+        $supplier->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('suppliers.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Supplier $supplier)
+    {
+        $supplier->delete();
+
+        return redirect()->route('suppliers.index');
+    }
+}
