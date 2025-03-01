@@ -31,7 +31,7 @@ const CustomDataTable = ({ columns, data, title, filterColumns = [] }) => {
                 highlightOnHover
                 responsive
                 striped
-                className='rounded-lg shadow-sm'
+                className='rounded-lg'
                 customStyles={{
                     headCells: {
                         style: {
