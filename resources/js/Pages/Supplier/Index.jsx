@@ -35,7 +35,7 @@ const Index = ({suppliers}) => {
         {
             name: "Status",
             selector: (row) => <span
-                className={`text-${row.status_display === 'Active' ? 'green' : 'red'}-600 bg-${row.status_display === 'Active' ? 'green' : 'red'}-200 p-2 font-medium`}>{row.status_display}</span>,
+                className={`${row.status_display === 'Active' ? 'text-green-600 bg-green-200' : 'text-red-600 bg-red-200'} p-2 font-medium`}>{row.status_display}</span>,
         },
         {
             name: "Actions",
