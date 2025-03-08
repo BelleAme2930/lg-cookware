@@ -5,7 +5,7 @@ import ShadowBox from "@/Components/ShadowBox.jsx";
 import LabelValue from "@/Components/LabelValue.jsx";
 import Title from "@/Components/Title.jsx";
 import LinkButton from "@/Components/LinkButton.jsx";
-import {FaArrowLeft} from "react-icons/fa";
+import {FaArrowLeft, FaEdit} from "react-icons/fa";
 
 const Show = ({supplier}) => {
     return (
@@ -13,9 +13,14 @@ const Show = ({supplier}) => {
             header={
                 <div className='flex justify-between items-center'>
                     <Title title='Supplier Details'/>
-                    <LinkButton href={route('suppliers.index')} icon={<FaArrowLeft/>}>
-                        Back to List
-                    </LinkButton>
+                    <div className='flex items-center gap-2'>
+                        <LinkButton href={route('suppliers.edit', supplier)} icon={<FaEdit/>}>
+                            Edit
+                        </LinkButton>
+                        <LinkButton href={route('suppliers.index')} icon={<FaArrowLeft/>}>
+                            Back to List
+                        </LinkButton>
+                    </div>
                 </div>
             }
         >
