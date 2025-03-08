@@ -6,12 +6,13 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Auth/Login');
+    return Auth::check()
+        ? redirect()->route('dashboard')
+        : Inertia::render('Auth/Login');
 });
 
 Route::get('/dashboard', function () {
