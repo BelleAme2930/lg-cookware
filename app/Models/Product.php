@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -28,6 +29,13 @@ class Product extends Model
     public function sizes()
     {
         return $this->hasMany(ProductSize::class, 'product_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'type' => ProductTypeEnum::class,
+        ];
     }
 
 }

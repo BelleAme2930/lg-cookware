@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductTypeEnum;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\CategoryResource;
@@ -45,13 +46,23 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        Product::create([
+        $product = Product::create([
             'name' => $request->name,
             'description' => $request->description,
             'category_id' => $request->category,
             'supplier_id' => $request->supplier,
             'type' => $request->type,
         ]);
+
+        foreach ($request->sizes as $size) {
+            $product->sizes()->create([
+                'name' => $size['name'],
+                'purchase_price' => $size['purchase_price'],
+                'sale_price' => $size['sale_price'],
+                'weight' => $request->type === ProductTypeEnum::Weight ? $size['weight'] : null,
+                'quantity' => $size['quantity'],
+            ]);
+        }
 
         return redirect()->route('products.index');
     }
@@ -74,6 +85,8 @@ class ProductController extends Controller
         $categories = Category::all();
         $suppliers = Supplier::all();
 
+        $product->load(['sizes']);
+
         return Inertia::render('Product/Edit', [
             'product' => ProductResource::make($product),
             'categories' => CategoryResource::collection($categories),
@@ -93,6 +106,18 @@ class ProductController extends Controller
             'supplier_id' => $request->supplier,
             'type' => $request->type,
         ]);
+
+        $product->sizes()->delete();
+
+        foreach ($request->sizes as $size) {
+            $product->sizes()->create([
+                'name' => $size['name'],
+                'purchase_price' => $size['purchase_price'],
+                'sale_price' => $size['sale_price'],
+                'weight' => $request->type === ProductTypeEnum::Weight ? $size['weight'] : null,
+                'quantity' => $size['quantity'],
+            ]);
+        }
 
         return redirect()->route('products.index');
     }

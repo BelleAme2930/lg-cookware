@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useForm} from "@inertiajs/react";
 import TextInput from "@/Components/TextInput.jsx";
 import InputLabel from "@/Components/InputLabel.jsx";
@@ -7,6 +7,7 @@ import InputError from "@/Components/InputError.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 import InputSelect from "@/Components/InputSelect.jsx";
 import Textarea from "@/Components/Textarea.jsx";
+import ProductSizes from "@/Pages/Product/Partials/ProductSizes.jsx";
 
 const ProductForm = ({product = null, categories, suppliers}) => {
     const {data, setData, post, patch, processing, reset, errors, isDirty} = useForm({
@@ -15,7 +16,14 @@ const ProductForm = ({product = null, categories, suppliers}) => {
         name: product?.name ?? '',
         description: product?.description ?? '',
         type: product?.type ?? '',
+        sizes: product?.sizes ?? [],
     });
+
+    useEffect(() => {
+        if (product && product.sizes) {
+            setData('sizes', product.sizes);
+        }
+    }, [product]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -45,6 +53,23 @@ const ProductForm = ({product = null, categories, suppliers}) => {
             label: supplier.name,
         };
     });
+
+    const canSubmit = () => {
+        if (!data.isDirty || !data.name || !data.description || !data.category || !data.supplier || !data.type) {
+            return false;
+        }
+
+        if (!data.sizes || data.sizes.length === 0) {
+            return false;
+        }
+
+        return data.sizes.every(size =>
+            size.name && size.purchase_price && size.sale_price &&
+            (size.quantity || size.quantity === 0) &&
+            (data.type !== 'weight' || (size.weight || size.weight === 0))
+        );
+    };
+
 
     return (
         <ShadowBox className='w-3/4 mx-auto'>
@@ -99,7 +124,13 @@ const ProductForm = ({product = null, categories, suppliers}) => {
                         id="type"
                         label="Product Type"
                         options={productTypeOptions}
-                        onChange={(option) => setData('type', option ? option.value : '')}
+                        onChange={(option) => {
+                            const newType = option ? option.value : '';
+                            setData('type', newType);
+                            if (newType !== data.type) {
+                                setData('sizes', []);
+                            }
+                        }}
                         error={!!errors.type}
                         value={data.type}
                         required={true}
@@ -107,9 +138,20 @@ const ProductForm = ({product = null, categories, suppliers}) => {
                         className="w-full"
                     />
                 </div>
+                {data.type && (
+                    <ProductSizes
+                        value={data.sizes}
+                        onChange={(sizes) => {
+                            setData('sizes', sizes);
+                            setData('isDirty', true);
+                        }}
+                        errors={errors}
+                        productType={data.type}
+                    />
+                )}
                 <Button
                     type="submit"
-                    disabled={processing || !isDirty || !data.supplier || !data.category || !data.name || !data.description || !data.type}
+                    disabled={processing || !canSubmit()}
                     className="mt-3"
                 >
                     {processing ? 'Submitting...' : 'Submit'}
