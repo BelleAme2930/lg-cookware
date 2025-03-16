@@ -24,8 +24,8 @@ class SupplierResource extends JsonResource
             'current_balance' => $this->current_balance,
             'status_display' => $this->status ? 'Active' : 'Inactive',
             'status' => $this->status,
-            'created_at' => $this->created_at->format('d-M-Y'),
-            'updated_at' => $this->updated_at->format('d-M-Y'),
+            'created_at' => $this->created_at ? $this->created_at->format('d-M-Y') : null,
+            'updated_at' => $this->updated_at ? $this->updated_at->format('d-M-Y') : null,
         ];
     }
 }

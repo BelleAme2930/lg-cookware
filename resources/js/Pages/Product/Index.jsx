@@ -30,6 +30,10 @@ const Index = ({ products }) => {
     const columns = [
         { name: "ID", selector: (row) => row.id },
         { name: "Name", selector: (row) => row.name },
+        {
+            name: "Sizes",
+            selector: (row) => row.sizes.length ? row.sizes.map(size => size.name).join(", ") : '-'
+        },
         { name: "Created Date", selector: (row) => row.created_at },
         {
             name: "Actions",

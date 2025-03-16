@@ -20,7 +20,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['sizes'])->get();
+        $products = Product::with([
+            'sizes:id,product_id,name',
+        ])->get();
 
         return Inertia::render('Product/Index', [
             'products' => ProductResource::collection($products),
@@ -72,6 +74,12 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $product->load([
+            'supplier:id,name',
+            'sizes:id,product_id,name,purchase_price,sale_price,weight,quantity',
+            'category:id,name',
+        ]);
+
         return Inertia::render('Product/Show', [
             'product' => ProductResource::make($product),
         ]);
