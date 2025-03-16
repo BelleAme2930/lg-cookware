@@ -4,7 +4,6 @@ import TextInput from "@/Components/TextInput.jsx";
 import InputLabel from "@/Components/InputLabel.jsx";
 import Button from "@/Components/Button.jsx";
 import InputError from "@/Components/InputError.jsx";
-import Textarea from "@/Components/Textarea.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 import InputSelect from "@/Components/InputSelect.jsx";
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
         'expenses' => ExpenseController::class,
         'suppliers' => SupplierController::class,
         'customers' => CustomerController::class,
+        'products' => ProductController::class
     ]);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

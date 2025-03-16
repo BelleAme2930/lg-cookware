@@ -39,7 +39,7 @@ class ExpenseController extends Controller
             'description' => $request->description,
             'amount' => $request->amount,
             'expense_date' => $request->expense_date,
-            'paid_date' => $request->paid_date,
+            'paid_date' => $request->paid_date ? $request->paid_date : null,
         ]);
 
         return redirect()->route('expenses.index');
@@ -75,7 +75,7 @@ class ExpenseController extends Controller
             'description' => $request->description,
             'amount' => $request->amount,
             'expense_date' => $request->expense_date,
-            'paid_date' => $request->paid_date,
+            'paid_date' => $request->paid_date ? $request->paid_date : null,
         ]);
 
         return redirect()->route('expenses.index');

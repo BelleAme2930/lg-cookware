@@ -38,7 +38,7 @@ const InputSelect = ({ id, label, options, value, onChange, error, required, err
     };
 
     return (
-        <div className="mb-4 w-full">
+        <div className="w-full">
             <div className="flex items-center justify-between">
                 {label &&
                     <InputLabel value={label}/>
