@@ -17,7 +17,7 @@ class ExpenseController extends Controller
     {
         $expenses = Expense::all();
         return Inertia::render('Expense/Index', [
-            'expenses' => ExpenseResource::collection($expenses)->resolve(),
+            'expenses' => ExpenseResource::collection($expenses),
         ]);
     }
 
@@ -51,7 +51,7 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         return Inertia::render('Expense/Show', [
-            'expense' => ExpenseResource::make($expense)->resolve(),
+            'expense' => ExpenseResource::make($expense),
         ]);
     }
 
@@ -61,7 +61,7 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         return Inertia::render('Expense/Edit', [
-            'expense' => ExpenseResource::make($expense)->resolve(),
+            'expense' => ExpenseResource::make($expense),
         ]);
     }
 

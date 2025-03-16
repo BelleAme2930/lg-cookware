@@ -17,7 +17,7 @@ class CustomerController extends Controller
     {
         $customers = Customer::all();
         return Inertia::render('Customer/Index', [
-            'customers' => CustomerResource::collection($customers)->resolve(),
+            'customers' => CustomerResource::collection($customers),
         ]);
     }
 
@@ -53,7 +53,7 @@ class CustomerController extends Controller
     public function show(Customer $customer)
     {
         return Inertia::render('Customer/Show', [
-            'customer' => CustomerResource::make($customer)->resolve(),
+            'customer' => CustomerResource::make($customer),
         ]);
     }
 
@@ -63,7 +63,7 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         return Inertia::render('Customer/Edit', [
-            'customer' => CustomerResource::make($customer)->resolve(),
+            'customer' => CustomerResource::make($customer),
         ]);
     }
 

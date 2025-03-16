@@ -22,7 +22,7 @@ class ProductController extends Controller
         $products = Product::with(['sizes'])->get();
 
         return Inertia::render('Product/Index', [
-            'products' => ProductResource::collection($products)->resolve(),
+            'products' => ProductResource::collection($products),
         ]);
     }
 
@@ -35,8 +35,8 @@ class ProductController extends Controller
         $suppliers = Supplier::all();
 
         return Inertia::render('Product/Create', [
-            'categories' => CategoryResource::collection($categories)->resolve(),
-            'suppliers' => SupplierResource::collection($suppliers)->resolve(),
+            'categories' => CategoryResource::collection($categories),
+            'suppliers' => SupplierResource::collection($suppliers),
         ]);
     }
 
@@ -62,7 +62,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Product/Show', [
-            'product' => ProductResource::make($product)->resolve(),
+            'product' => ProductResource::make($product),
         ]);
     }
 
@@ -71,8 +71,13 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $categories = Category::all();
+        $suppliers = Supplier::all();
+
         return Inertia::render('Product/Edit', [
-            'product' => ProductResource::make($product)->resolve(),
+            'product' => ProductResource::make($product),
+            'categories' => CategoryResource::collection($categories),
+            'suppliers' => SupplierResource::collection($suppliers),
         ]);
     }
 
@@ -82,9 +87,11 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update([
-            'title' => $request->title,
-            'product_number' => $request->product_number,
-            'bank_name' => $request->bank_name,
+            'name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category,
+            'supplier_id' => $request->supplier,
+            'type' => $request->type,
         ]);
 
         return redirect()->route('products.index');

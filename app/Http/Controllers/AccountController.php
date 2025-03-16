@@ -17,7 +17,7 @@ class AccountController extends Controller
     {
         $accounts = Account::all();
         return Inertia::render('Account/Index', [
-            'accounts' => AccountResource::collection($accounts)->resolve(),
+            'accounts' => AccountResource::collection($accounts),
         ]);
     }
 
@@ -49,7 +49,7 @@ class AccountController extends Controller
     public function show(Account $account)
     {
         return Inertia::render('Account/Show', [
-            'account' => AccountResource::make($account)->resolve(),
+            'account' => AccountResource::make($account),
         ]);
     }
 
@@ -59,7 +59,7 @@ class AccountController extends Controller
     public function edit(Account $account)
     {
         return Inertia::render('Account/Edit', [
-            'account' => AccountResource::make($account)->resolve(),
+            'account' => AccountResource::make($account),
         ]);
     }
 

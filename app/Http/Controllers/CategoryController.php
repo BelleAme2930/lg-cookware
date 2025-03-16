@@ -17,7 +17,7 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
         return Inertia::render('Category/Index', [
-            'categories' => CategoryResource::collection($categories)->resolve(),
+            'categories' => CategoryResource::collection($categories),
         ]);
     }
 
@@ -48,7 +48,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         return Inertia::render('Category/Show', [
-            'category' => CategoryResource::make($category)->resolve(),
+            'category' => CategoryResource::make($category),
         ]);
     }
 
@@ -58,7 +58,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         return Inertia::render('Category/Edit', [
-            'category' => CategoryResource::make($category)->resolve(),
+            'category' => CategoryResource::make($category),
         ]);
     }
 

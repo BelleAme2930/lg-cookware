@@ -73,6 +73,7 @@ const ProductForm = ({product = null, categories, suppliers}) => {
                         id="category_id"
                         label="Product Category"
                         options={categoryOptions}
+                        value={data.category}
                         onChange={(option) => setData('category', option ? option.value : '')}
                         error={!!errors.category}
                         required={true}
@@ -87,6 +88,7 @@ const ProductForm = ({product = null, categories, suppliers}) => {
                         options={supplierOptions}
                         onChange={(option) => setData('supplier', option ? option.value : '')}
                         error={!!errors.supplier}
+                        value={data.supplier}
                         required={true}
                         errorMsg={errors.supplier}
                         className="w-full"
@@ -99,6 +101,7 @@ const ProductForm = ({product = null, categories, suppliers}) => {
                         options={productTypeOptions}
                         onChange={(option) => setData('type', option ? option.value : '')}
                         error={!!errors.type}
+                        value={data.type}
                         required={true}
                         errorMsg={errors.type}
                         className="w-full"

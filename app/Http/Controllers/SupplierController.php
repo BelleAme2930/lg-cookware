@@ -17,7 +17,7 @@ class SupplierController extends Controller
     {
         $suppliers = Supplier::all();
         return Inertia::render('Supplier/Index', [
-            'suppliers' => SupplierResource::collection($suppliers)->resolve(),
+            'suppliers' => SupplierResource::collection($suppliers),
         ]);
     }
 
@@ -53,7 +53,7 @@ class SupplierController extends Controller
     public function show(Supplier $supplier)
     {
         return Inertia::render('Supplier/Show', [
-            'supplier' => SupplierResource::make($supplier)->resolve(),
+            'supplier' => SupplierResource::make($supplier),
         ]);
     }
 
@@ -63,7 +63,7 @@ class SupplierController extends Controller
     public function edit(Supplier $supplier)
     {
         return Inertia::render('Supplier/Edit', [
-            'supplier' => SupplierResource::make($supplier)->resolve(),
+            'supplier' => SupplierResource::make($supplier),
         ]);
     }
 
