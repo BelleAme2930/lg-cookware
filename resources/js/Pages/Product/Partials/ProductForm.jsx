@@ -10,7 +10,7 @@ import Textarea from "@/Components/Textarea.jsx";
 import ProductSizes from "@/Pages/Product/Partials/ProductSizes.jsx";
 
 const ProductForm = ({product = null, categories, suppliers}) => {
-    const {data, setData, post, patch, processing, reset, errors, isDirty} = useForm({
+    const {data, setData, post, patch, processing, reset, errors} = useForm({
         category: product?.category_id ?? '',
         supplier: product?.supplier_id ?? '',
         name: product?.name ?? '',

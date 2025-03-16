@@ -4,7 +4,7 @@ import TextInput from "@/Components/TextInput.jsx";
 import Button from "@/Components/Button.jsx";
 import InputError from "@/Components/InputError.jsx";
 import IconButton from "@/Components/IconButton.jsx";
-import {FaTimes, FaTrash} from "react-icons/fa";
+import {FaTrash} from "react-icons/fa";
 
 const ProductSizes = ({ value = [], onChange, errors = {}, productType }) => {
     const [sizes, setSizes] = useState(value);
