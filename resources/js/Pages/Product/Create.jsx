@@ -11,14 +11,14 @@ const Create = ({categories, suppliers}) => {
         <AuthenticatedLayout
             header={
                 <div className='flex justify-between items-center'>
-                    <Title title='Create New Account'/>
-                    <LinkButton href={route('accounts.index')} icon={<FaArrowLeft/>}>
+                    <Title title='Create New Product'/>
+                    <LinkButton href={route('products.index')} icon={<FaArrowLeft/>}>
                         Back to List
                     </LinkButton>
                 </div>
             }
         >
-            <Head title="Accounts"/>
+            <Head title="Products"/>
             <ProductForm categories={categories} suppliers={suppliers} />
         </AuthenticatedLayout>
     );
