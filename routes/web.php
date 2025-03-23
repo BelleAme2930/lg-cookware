@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,7 +29,8 @@ Route::middleware('auth')->group(function () {
         'expenses' => ExpenseController::class,
         'suppliers' => SupplierController::class,
         'customers' => CustomerController::class,
-        'products' => ProductController::class
+        'products' => ProductController::class,
+        'purchases' => PurchaseController::class,
     ]);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
