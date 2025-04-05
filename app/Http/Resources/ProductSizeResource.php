@@ -22,6 +22,7 @@ class ProductSizeResource extends JsonResource
             'sale_price' => $this->sale_price,
             'weight' => $this->weight,
             'quantity' => $this->quantity,
+            'product' => $this->whenLoaded('product', fn() => ProductResource::make($this->product)),
             'created_at' => $this->created_at ? $this->created_at->format('d-M-Y') : null,
             'updated_at' => $this->updated_at ? $this->updated_at->format('d-M-Y') : null,
         ];

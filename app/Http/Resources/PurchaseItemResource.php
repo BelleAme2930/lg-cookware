@@ -22,7 +22,7 @@ class PurchaseItemResource extends JsonResource
             'quantity' => $this->quantity,
             'unit_price' => $this->unit_price,
             'total_price' => $this->total_price,
-//            'product_size' => $this->whenLoaded('productSize', fn() => ProductSizeResource::make($this->productSize)),
+            'product_size' => $this->whenLoaded('productSize', fn() => ProductSizeResource::make($this->productSize)),
         ];
     }
 }

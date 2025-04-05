@@ -21,7 +21,6 @@ class PurchaseController extends Controller
     public function index()
     {
         $purchases = Purchase::with([
-//            'supplier:id,name',
             'items',
         ])->latest()->get();
 
@@ -69,5 +68,17 @@ class PurchaseController extends Controller
 
         return redirect()->route('purchases.index')
             ->with('success', 'Purchase created successfully');
+    }
+
+    public function show(Purchase $purchase)
+    {
+        $purchase->load([
+            'supplier',
+            'items.productSize.product',
+        ]);
+
+        return Inertia::render('Purchase/Show', [
+            'purchase' => PurchaseResource::make($purchase),
+        ]);
     }
 }

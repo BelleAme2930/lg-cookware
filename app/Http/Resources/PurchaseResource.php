@@ -22,6 +22,11 @@ class PurchaseResource extends JsonResource
             'total_amount' => number_format($this->total_amount),
             'items_count' => $this->whenLoaded('items', fn() => $this->items->count()),
             'items' => $this->whenLoaded('items', fn() => PurchaseItemResource::collection($this->items)),
+            'item_names' => $this->whenLoaded('items', function () {
+                return $this->items->map(function ($item) {
+                    return $item->productSize->name;
+                })->implode(', ');
+            }),
             'created_at' => $this->created_at->format('d-M-Y'),
             'updated_at' => $this->updated_at->format('d-M-Y'),
         ];
