@@ -104,19 +104,19 @@ const ProductSizes = ({ value = [], onChange, errors = {}, productType }) => {
                         )}
                     </div>
 
-                    <div className="w-full flex-1">
-                        <InputLabel className="text-sm">Quantity</InputLabel>
-                        <TextInput
-                            type="number"
-                            value={size.quantity}
-                            onChange={(e) => handleSizeChange(index, 'quantity', e.target.value)}
-                            placeholder="0"
-                            className="w-full"
-                        />
-                        {errors[`sizes.${index}.quantity`] && (
-                            <InputError message={errors[`sizes.${index}.quantity`]} />
-                        )}
-                    </div>
+                    {/*<div className="w-full flex-1">*/}
+                    {/*    <InputLabel className="text-sm">Quantity</InputLabel>*/}
+                    {/*    <TextInput*/}
+                    {/*        type="number"*/}
+                    {/*        value={size.quantity}*/}
+                    {/*        onChange={(e) => handleSizeChange(index, 'quantity', e.target.value)}*/}
+                    {/*        placeholder="0"*/}
+                    {/*        className="w-full"*/}
+                    {/*    />*/}
+                    {/*    {errors[`sizes.${index}.quantity`] && (*/}
+                    {/*        <InputError message={errors[`sizes.${index}.quantity`]} />*/}
+                    {/*    )}*/}
+                    {/*</div>*/}
 
                     {/* Show weight field only for weight type products */}
                     {productType === 'weight' && (

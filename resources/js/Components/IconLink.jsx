@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
 
-const IconButton = ({ href, icon, className = '' }) => {
+const IconLink = ({ href, icon, className = '' }) => {
     return (
         <Link
             href={href}
@@ -12,4 +12,4 @@ const IconButton = ({ href, icon, className = '' }) => {
     );
 };
 
-export default IconButton;
+export default IconLink;
