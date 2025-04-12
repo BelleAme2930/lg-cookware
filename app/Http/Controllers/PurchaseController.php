@@ -70,6 +70,20 @@ class PurchaseController extends Controller
                 }
             }
 
+            foreach ($request->payments as $paymentData) {
+                $purchase->payments()->create([
+                    'method' => $paymentData['method'],
+                    'amount' => $paymentData['amount'],
+                    'payment_date' => $paymentData['payment_date'],
+                    'notes' => $paymentData['notes'],
+                    'due_date' => $paymentData['due_date'] ?? null,
+                    'remaining_balance' => $paymentData['remaining_balance'] ?? null,
+                    'account_id' => $paymentData['account_id'] ?? null,
+                    'cheque_number' => $paymentData['cheque_number'] ?? null,
+                    'bank_name' => $paymentData['bank_name'] ?? null,
+                ]);
+            }
+
             DB::commit();
             return redirect()->route('purchases.index')
                 ->with('success', 'Purchase created successfully');
@@ -139,6 +153,21 @@ class PurchaseController extends Controller
                         'total_price' => $request->total_amount,
                     ]);
                 }
+            }
+
+            $purchase->payments()->delete();
+            foreach ($request->payments as $paymentData) {
+                $purchase->payments()->create([
+                    'method' => $paymentData['method'],
+                    'amount' => $paymentData['amount'],
+                    'payment_date' => $paymentData['payment_date'],
+                    'notes' => $paymentData['notes'],
+                    'due_date' => $paymentData['due_date'] ?? null,
+                    'remaining_balance' => $paymentData['remaining_balance'] ?? null,
+                    'account_id' => $paymentData['account_id'] ?? null,
+                    'cheque_number' => $paymentData['cheque_number'] ?? null,
+                    'bank_name' => $paymentData['bank_name'] ?? null,
+                ]);
             }
 
             DB::commit();
