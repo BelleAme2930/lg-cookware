@@ -16,8 +16,10 @@ class PurchaseResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'supplier_id' => $this->supplier_id,
             'supplier' => $this->whenLoaded('supplier', fn() => SupplierResource::make($this->supplier)),
-            'purchase_date' => $this->purchase_date->format('d-M-Y'),
+            'purchase_date' => $this->purchase_date->format('Y-m-d'),
+            'purchase_date_display' => $this->purchase_date->format('d-M-Y'),
             'notes' => $this->notes,
             'total_amount' => number_format($this->total_amount),
             'items_count' => $this->whenLoaded('items', fn() => $this->items->count()),

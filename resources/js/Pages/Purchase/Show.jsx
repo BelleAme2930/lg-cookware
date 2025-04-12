@@ -9,7 +9,6 @@ import {FaArrowLeft, FaEdit} from "react-icons/fa";
 import PurchaseDetails from "@/Pages/Purchase/Partials/PurchaseDetails.jsx";
 
 const Show = ({purchase}) => {
-    console.log(purchase)
     return (
         <AuthenticatedLayout
             header={
@@ -29,7 +28,7 @@ const Show = ({purchase}) => {
             <Head title="Purchase Details"/>
             <div className='flex gap-2 mb-3'>
                 <ShadowBox className='w-1/3' title='Purchase Details'>
-                    <LabelValue title='Purchase Date'>{purchase.purchase_date}</LabelValue>
+                    <LabelValue title='Purchase Date'>{purchase.purchase_date_display}</LabelValue>
                     <LabelValue title='Total Items'>{purchase.items_count}</LabelValue>
                     <LabelValue title='Notes' lastRow={true}>{purchase.notes}</LabelValue>
                 </ShadowBox>

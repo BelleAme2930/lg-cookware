@@ -20,8 +20,8 @@ class PurchaseItemResource extends JsonResource
             'product_size_id' => $this->product_size_id,
             'weight' => $this->weight,
             'quantity' => $this->quantity,
-            'unit_price' => $this->unit_price,
-            'total_price' => $this->total_price,
+            'unit_price' => number_format($this->unit_price),
+            'total_price' => number_format($this->total_price),
             'product_size' => $this->whenLoaded('productSize', fn() => ProductSizeResource::make($this->productSize)),
         ];
     }

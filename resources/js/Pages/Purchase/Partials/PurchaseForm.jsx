@@ -11,6 +11,13 @@ import IconButton from "@/Components/IconButton.jsx";
 import {FaTrash} from "react-icons/fa";
 
 const PurchaseForm = ({purchase, suppliers, products}) => {
+
+    const formattedProducts = purchase?.items ? formatExistingItems(purchase.items) : [];
+
+    const [selectedProductIds, setSelectedProductIds] = useState(
+        formattedProducts.map(item => item.product_id)
+    );
+
     const {data, setData, errors, processing, post, patch, reset} = useForm({
         supplier: purchase?.supplier_id ?? '',
         purchase_date: purchase?.purchase_date ?? '',
@@ -18,21 +25,16 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
         products: purchase?.items ? formatExistingItems(purchase.items) : [],
     });
 
-    // For UI display of selected products
-    const [selectedProductIds, setSelectedProductIds] = useState(
-        purchase?.items ? purchase.items.map(item => item.product_id) : []
-    );
-
     function formatExistingItems(items) {
         return items.map(item => ({
-            product_id: item.product_id,
-            sizes: item.sizes.map(size => ({
-                value: size.product_size_id,
-                label: size.size_name,
-                quantity: size.quantity,
-                price: size.price,
-                weight: size.weight,
-            }))
+            product_id: item.product_size.product_id,
+            sizes: [{
+                value: item.product_size.id,
+                label: item.product_size.name,
+                quantity: item.quantity,
+                price: item.unit_price,
+                weight: item.weight
+            }]
         }));
     }
 
@@ -164,6 +166,7 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
                 onSuccess: () => reset()
             });
     };
+    console.log(data.products)
 
     return (
         <ShadowBox className='w-3/4 mx-auto'>
@@ -217,7 +220,6 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
                                 label="Add Product"
                                 options={productOptions}
                                 onChange={handleAddProduct}
-                                value=""
                                 placeholder="Select product to add"
                                 className="w-full"
                             />
@@ -238,6 +240,7 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
                                     value: size.id,
                                     label: size.name,
                                 }));
+                                console.log(productEntry, 'productEntry')
 
                                 return (
                                     <div key={index} className='mb-6 border border-gray-200 rounded-md p-4'>

@@ -51,7 +51,10 @@ const InputSelect = ({ id, label, options, value, onChange, error, required, err
             </div>
             <Select
                 id={id} isMulti={isMulti}
-                value={options.find(option => option.value === value)}
+                value={isMulti
+                    ? value
+                    : options.find(option => option.value === value)
+                }
                 onChange={onChange}
                 options={options}
                 isClearable

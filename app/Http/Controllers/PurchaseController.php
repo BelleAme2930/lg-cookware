@@ -14,6 +14,7 @@ use App\Models\ProductSize;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PurchaseController extends Controller
@@ -44,31 +45,41 @@ class PurchaseController extends Controller
 
     public function store(StorePurchaseRequest $request)
     {
-        $purchase = Purchase::create([
-            'supplier_id' => $request->supplier,
-            'purchase_date' => $request->purchase_date,
-            'notes' => $request->notes,
-            'total_amount' => $request->total_amount,
-        ]);
+        DB::beginTransaction();
 
-        foreach ($request->products as $productData) {
-            $product = Product::find($productData['product_id']);
+        try {
+            $purchase = Purchase::create([
+                'supplier_id' => $request->supplier,
+                'purchase_date' => $request->purchase_date,
+                'notes' => $request->notes,
+                'total_amount' => $request->total_amount,
+            ]);
 
-            foreach ($productData['sizes'] as $sizeData) {
-                $purchase->items()->create([
-                    'product_id' => $product->id,
-                    'product_size_id' => $sizeData['value'],
-                    'quantity' => $sizeData['quantity'],
-                    'unit_price' => $sizeData['price'],
-                    'weight' => $product->type === ProductTypeEnum::Weight ? WeightHelper::toGrams($sizeData['weight']) : null,
-                    'total_price' => $request->total_amount,
-                ]);
+            foreach ($request->products as $productData) {
+                $product = Product::find($productData['product_id']);
+
+                foreach ($productData['sizes'] as $sizeData) {
+                    $purchase->items()->create([
+                        'product_id' => $product->id,
+                        'product_size_id' => $sizeData['value'],
+                        'quantity' => $sizeData['quantity'],
+                        'unit_price' => $sizeData['price'],
+                        'weight' => $product->type === ProductTypeEnum::Weight ? WeightHelper::toGrams($sizeData['weight']) : null,
+                        'total_price' => $request->total_amount,
+                    ]);
+                }
             }
-        }
 
-        return redirect()->route('purchases.index')
-            ->with('success', 'Purchase created successfully');
+            DB::commit();
+            return redirect()->route('purchases.index')
+                ->with('success', 'Purchase created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('purchases.index')
+                ->with('error', 'Error occurred while creating purchase');
+        }
     }
+
 
     public function show(Purchase $purchase)
     {
@@ -81,4 +92,64 @@ class PurchaseController extends Controller
             'purchase' => PurchaseResource::make($purchase),
         ]);
     }
+
+    public function edit(Purchase $purchase)
+    {
+        $purchase->load([
+            'supplier',
+            'items.productSize.product',
+        ]);
+
+        $suppliers = Supplier::all();
+        $products = Product::with(['sizes'])->get();
+        $productSizes = ProductSize::with(['product'])->get();
+
+        return Inertia::render('Purchase/Edit', [
+            'purchase' => PurchaseResource::make($purchase),
+            'products' => ProductResource::collection($products),
+            'suppliers' => SupplierResource::collection($suppliers),
+            'productSizes' => ProductSizeResource::collection($productSizes)
+        ]);
+    }
+
+    public function update(StorePurchaseRequest $request, Purchase $purchase)
+    {
+        DB::beginTransaction();
+
+        try {
+            $purchase->update([
+                'supplier_id' => $request->supplier,
+                'purchase_date' => $request->purchase_date,
+                'notes' => $request->notes,
+                'total_amount' => $request->total_amount,
+            ]);
+
+            $purchase->items()->delete();
+
+            foreach ($request->products as $productData) {
+                $product = Product::find($productData['product_id']);
+
+                foreach ($productData['sizes'] as $sizeData) {
+                    $purchase->items()->create([
+                        'product_id' => $product->id,
+                        'product_size_id' => $sizeData['value'],
+                        'quantity' => $sizeData['quantity'],
+                        'unit_price' => $sizeData['price'],
+                        'weight' => $product->type === ProductTypeEnum::Weight ? WeightHelper::toGrams($sizeData['weight']) : null,
+                        'total_price' => $request->total_amount,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('purchases.index')
+                ->with('success', 'Purchase updated successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('purchases.index')
+                ->with('error', 'Error occurred while updating purchase');
+        }
+    }
+
+
 }
