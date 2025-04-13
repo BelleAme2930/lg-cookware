@@ -11,7 +11,7 @@ const PurchasePaymentDetails = ({ payments }) => {
         );
     }
 
-    const paymentData = payments.map((payment, index) => {
+    const paymentData = payments.map((payment) => {
         // Define method badge color based on payment method
         let methodColor;
         switch (payment.method) {

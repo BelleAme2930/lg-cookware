@@ -14,7 +14,6 @@ const PurchaseForm = ({purchase, suppliers, products, accounts}) => {
     console.log(purchase)
 
     const formattedProducts = purchase?.items ? formatExistingItems(purchase.items) : [];
-    const formattedPayments = purchase?.payments ? formatExistingPayments(purchase.payments) : [];
 
     const [selectedProductIds, setSelectedProductIds] = useState(
         formattedProducts.map(item => item.product_id)
