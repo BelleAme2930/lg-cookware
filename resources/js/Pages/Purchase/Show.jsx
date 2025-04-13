@@ -32,11 +32,11 @@ const Show = ({purchase}) => {
                         <LinkButton href={route('purchases.edit', purchase)} icon={<FaEdit/>}>
                             Edit
                         </LinkButton>
-                        <LinkButton href={route('purchases.index')} icon={<FaArrowLeft/>}>
-                            Back to List
-                        </LinkButton>
                         <LinkButton href={route('purchases.invoice', purchase)} icon={<FaPrint/>}>
                             Invoice
+                        </LinkButton>
+                        <LinkButton href={route('purchases.index')} icon={<FaArrowLeft/>}>
+                            Back to List
                         </LinkButton>
                     </div>
                 </div>
