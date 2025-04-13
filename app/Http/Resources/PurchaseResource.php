@@ -27,7 +27,7 @@ class PurchaseResource extends JsonResource
             'items' => $this->whenLoaded('items', fn() => PurchaseItemResource::collection($this->items)),
             'item_names' => $this->whenLoaded('items', function () {
                 return $this->items->map(function ($item) {
-                    return $item->productSize->name;
+                    return $item->productSize->product->name . ' ' . $item->productSize->name;
                 })->implode(', ');
             }),
             'payments' => $this->whenLoaded('payments', fn() => PaymentResource::collection($this->payments)),

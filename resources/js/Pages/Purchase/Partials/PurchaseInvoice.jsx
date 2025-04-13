@@ -122,15 +122,15 @@ const PurchaseInvoice = ({ purchase }) => {
                         <div className="w-64">
                             <div className="flex justify-between mb-2">
                                 <span className="font-medium">Sub Total:</span>
-                                <span>{purchase.total_amount_formatted} Rs</span>
+                                <span>{purchase.total_amount_formatted} Rs.</span>
                             </div>
                             <div className="flex justify-between mb-2">
                                 <span className="font-medium">Remaining Balance:</span>
-                                <span>{purchase.remaining_balance_formatted || "0"} Rs</span>
+                                <span>{purchase.remaining_balance_formatted || "0"} Rs.</span>
                             </div>
                             <div className="flex justify-between font-bold text-lg border-t pt-2 mt-2">
                                 <span>Total Price:</span>
-                                <span className="text-green-600">{purchase.total_amount_formatted} Rs</span>
+                                <span className="text-green-600">{purchase.total_amount_formatted} Rs.</span>
                             </div>
                         </div>
                     </div>
