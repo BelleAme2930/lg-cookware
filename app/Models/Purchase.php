@@ -37,4 +37,33 @@ class Purchase extends Model
     {
         return $this->morphMany(Payment::class, 'payable');
     }
+
+    public function isFullyPaid(): bool
+    {
+        $totalPaid = $this->payments->sum('amount');
+        return $totalPaid >= $this->total_amount;
+    }
+
+    public function getRemainingBalance(): float
+    {
+        $totalPaid = $this->payments->sum('amount');
+        return max(0, $this->total_amount - $totalPaid);
+    }
+
+    public function getPaymentStatus(): string
+    {
+        if ($this->isFullyPaid()) {
+            return 'Paid';
+        }
+
+        $hasCreditPayment = $this->payments->contains(function ($payment) {
+            return $payment->method->value === 'credit';
+        });
+
+        if ($hasCreditPayment) {
+            return 'Credit';
+        }
+
+        return 'Partial';
+    }
 }

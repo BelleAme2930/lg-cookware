@@ -7,11 +7,12 @@ import PurchaseForm from "@/Pages/Purchase/Partials/PurchaseForm.jsx";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 const Edit = ({
-                    purchase,
-                    products,
-                    suppliers,
-                    productSizes,
-                }) => {
+                  accounts,
+                  purchase,
+                  products,
+                  suppliers,
+                  productSizes,
+              }) => {
     return (
         <AuthenticatedLayout
             header={
@@ -25,6 +26,7 @@ const Edit = ({
         >
             <Head title="Purchases"/>
             <PurchaseForm
+                accounts={accounts}
                 purchase={purchase}
                 products={products}
                 productSizes={productSizes}

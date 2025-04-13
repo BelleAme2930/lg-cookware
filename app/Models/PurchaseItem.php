@@ -13,7 +13,8 @@ class PurchaseItem extends Model
         'weight',
         'quantity',
         'unit_price',
-        'total_price'
+        'total_price',
+        'batch_id'
     ];
 
     public function purchase(): BelongsTo

@@ -8,21 +8,32 @@ import InputLabel from "@/Components/InputLabel.jsx";
 import InputError from "@/Components/InputError.jsx";
 import Textarea from "@/Components/Textarea.jsx";
 import IconButton from "@/Components/IconButton.jsx";
-import {FaTrash} from "react-icons/fa";
+import {FaPlus, FaTrash} from "react-icons/fa";
 
-const PurchaseForm = ({purchase, suppliers, products}) => {
+const PurchaseForm = ({purchase, suppliers, products, accounts}) => {
+    console.log(purchase)
 
     const formattedProducts = purchase?.items ? formatExistingItems(purchase.items) : [];
+    const formattedPayments = purchase?.payments ? formatExistingPayments(purchase.payments) : [];
 
     const [selectedProductIds, setSelectedProductIds] = useState(
         formattedProducts.map(item => item.product_id)
     );
+
+    const paymentMethods = [
+        {value: 'cash', label: 'Cash'},
+        {value: 'transfer', label: 'Transfer'},
+        {value: 'credit', label: 'Credit'},
+        {value: 'cheque', label: 'Cheque'},
+    ];
 
     const {data, setData, errors, processing, post, patch, reset} = useForm({
         supplier: purchase?.supplier_id ?? '',
         purchase_date: purchase?.purchase_date ?? '',
         notes: purchase?.notes ?? '',
         products: purchase?.items ? formatExistingItems(purchase.items) : [],
+        payments: purchase?.payments ? formatExistingPayments(purchase.payments) : [],
+        total_amount: purchase?.total_amount ?? 0,
     });
 
     function formatExistingItems(items) {
@@ -38,9 +49,28 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
         }));
     }
 
+    function formatExistingPayments(payments) {
+        return payments.map(payment => ({
+            method: payment.method,
+            amount: payment.amount,
+            payment_date: payment.payment_date,
+            notes: payment.notes || '',
+            due_date: payment.due_date || '',
+            remaining_balance: payment.remaining_balance || '',
+            account_id: payment.account_id || '',
+            cheque_number: payment.cheque_number || '',
+            bank_name: payment.bank_name || '',
+        }));
+    }
+
     const supplierOptions = suppliers.map((supplier) => ({
         value: supplier.id,
         label: supplier.name,
+    }));
+
+    const accountOptions = accounts?.map((account) => ({
+        value: account.id,
+        label: account.title + ' - ' + account.bank_name,
     }));
 
     const filteredProducts = data.supplier
@@ -144,6 +174,44 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
         return total;
     };
 
+    const calculateTotalPaymentAmount = () => {
+        return data.payments.reduce((sum, payment) => {
+            return sum + (parseFloat(payment.amount) || 0);
+        }, 0);
+    };
+
+    const getRemainingBalance = () => {
+        const total = calculateTotalAmount();
+        const paid = calculateTotalPaymentAmount();
+        return Math.max(0, total - paid);
+    };
+
+    const handleAddPayment = () => {
+        const newPayment = {
+            method: 'cash',
+            amount: '',
+            payment_date: data.purchase_date || new Date().toISOString().split('T')[0],
+            notes: '',
+            due_date: '',
+            remaining_balance: '',
+            account_id: '',
+            cheque_number: '',
+            bank_name: '',
+        };
+
+        setData('payments', [...data.payments, newPayment]);
+    };
+
+    const handleRemovePayment = (index) => {
+        setData('payments', data.payments.filter((_, i) => i !== index));
+    };
+
+    const handlePaymentChange = (index, field, value) => {
+        setData('payments', data.payments.map((payment, i) =>
+            i === index ? {...payment, [field]: value} : payment
+        ));
+    };
+
     useEffect(() => {
         setData(prevData => ({
             ...prevData,
@@ -153,10 +221,6 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // const finalData = {
-        //     ...data,
-        //     total_amount: calculateTotalAmount(),
-        // };
 
         purchase
             ? patch(route('purchases.update', purchase), {
@@ -166,7 +230,16 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
                 onSuccess: () => reset()
             });
     };
-    console.log(data.products)
+
+    const bankOptions = [
+        { value: 'Bank Alfalah', label: 'Bank Alfalah' },
+        { value: 'HBL Bank', label: 'HBL Bank' },
+        { value: 'UBL Bank', label: 'UBL Bank' },
+        { value: 'Meezan Bank', label: 'Meezan Bank' },
+        { value: 'Jazzcash', label: 'Jazzcash' },
+        { value: 'Easypaisa', label: 'Easypaisa' },
+        { value: 'Nayapay', label: 'Nayapay' },
+    ];
 
     return (
         <ShadowBox className='w-3/4 mx-auto'>
@@ -240,7 +313,6 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
                                     value: size.id,
                                     label: size.name,
                                 }));
-                                console.log(productEntry, 'productEntry')
 
                                 return (
                                     <div key={index} className='mb-6 border border-gray-200 rounded-md p-4'>
@@ -350,11 +422,199 @@ const PurchaseForm = ({purchase, suppliers, products}) => {
                 )}
 
                 {data.products.length > 0 && (
-                    <div className='mb-4 text-right'>
-                        <div className='text-lg font-semibold'>
-                            Total: {calculateTotalAmount()} Rs.
+                    <>
+                        <div className='mb-4 text-right'>
+                            <div className='text-lg font-semibold'>
+                                Total: {calculateTotalAmount().toLocaleString()} Rs.
+                            </div>
                         </div>
-                    </div>
+                        <div className='mb-4'>
+                            <div className='flex items-center justify-between mb-2'>
+                                <h3 className='text-lg font-medium'>Payment Details</h3>
+                                <Button
+                                    type="button"
+                                    onClick={handleAddPayment}
+                                    className="flex items-center gap-1 !py-1 !px-2"
+                                >
+                                    <FaPlus size={12}/> Add Payment
+                                </Button>
+                            </div>
+
+                            {data.payments.length === 0 && (
+                                <div className='text-sm text-red-500 text-center p-2 bg-gray-100 rounded mb-3'>
+                                    No payments added yet. Click "Add Payment" to record payment details.
+                                </div>
+                            )}
+
+                            {data.payments.map((payment, index) => (
+                                <div key={index} className='mb-4 border border-gray-200 rounded-md p-4'>
+                                    <div className='flex items-center justify-between mb-3'>
+                                        <h4 className='font-semibold text-gray-800'>Payment #{index + 1}</h4>
+                                        <IconButton
+                                            icon={<FaTrash/>}
+                                            type="button"
+                                            onClick={() => handleRemovePayment(index)}
+                                            className="text-xs !p-1.5"
+                                        />
+                                    </div>
+
+                                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-3'>
+                                        <div>
+                                            <InputSelect
+                                                id={`payment_method_${index}`}
+                                                label="Payment Method"
+                                                options={paymentMethods}
+                                                onChange={(option) => handlePaymentChange(index, 'method', option.value)}
+                                                value={payment.method}
+                                                required={true}
+                                                errorMsg={errors[`payments.${index}.method`]}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                        <div>
+                                            <InputLabel>Amount</InputLabel>
+                                            <TextInput
+                                                type="number"
+                                                step="0.01"
+                                                min="0"
+                                                value={payment.amount}
+                                                onChange={(e) => handlePaymentChange(index, 'amount', e.target.value)}
+                                                placeholder="Enter amount"
+                                                className="w-full"
+                                                required
+                                            />
+                                            <InputError message={errors[`payments.${index}.amount`]}/>
+                                        </div>
+                                    </div>
+
+                                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-3'>
+                                        <div>
+                                            <InputLabel>Payment Date</InputLabel>
+                                            <TextInput
+                                                type="date"
+                                                value={payment.payment_date}
+                                                onChange={(e) => handlePaymentChange(index, 'payment_date', e.target.value)}
+                                                placeholder="Enter payment date"
+                                                className="w-full"
+                                                required
+                                            />
+                                            <InputError message={errors[`payments.${index}.payment_date`]}/>
+                                        </div>
+                                        <div>
+                                            <InputLabel>Notes</InputLabel>
+                                            <TextInput
+                                                type="text"
+                                                value={payment.notes}
+                                                onChange={(e) => handlePaymentChange(index, 'notes', e.target.value)}
+                                                placeholder="Enter payment notes (optional)"
+                                                className="w-full"
+                                            />
+                                            <InputError message={errors[`payments.${index}.notes`]}/>
+                                        </div>
+                                    </div>
+
+                                    {/* Conditional fields based on payment method */}
+                                    {payment.method === 'credit' && (
+                                        <div
+                                            className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 mt-2 bg-gray-50 p-3 rounded'>
+                                            <div>
+                                                <InputLabel>Due Date</InputLabel>
+                                                <TextInput
+                                                    type="date"
+                                                    value={payment.due_date}
+                                                    onChange={(e) => handlePaymentChange(index, 'due_date', e.target.value)}
+                                                    placeholder="Enter due date"
+                                                    className="w-full"
+                                                    required
+                                                />
+                                                <InputError message={errors[`payments.${index}.due_date`]}/>
+                                            </div>
+                                            <div>
+                                                <InputLabel>Remaining Balance</InputLabel>
+                                                <TextInput
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    value={payment.remaining_balance || getRemainingBalance()}
+                                                    onChange={(e) => handlePaymentChange(index, 'remaining_balance', e.target.value)}
+                                                    placeholder="Enter remaining balance"
+                                                    className="w-full"
+                                                    required
+                                                />
+                                                <InputError message={errors[`payments.${index}.remaining_balance`]}/>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {payment.method === 'transfer' && (
+                                        <div className='mb-3 mt-2 bg-gray-50 p-3 rounded'>
+                                            <div>
+                                                <InputSelect
+                                                    id={`account_id_${index}`}
+                                                    label="Account"
+                                                    options={accountOptions}
+                                                    onChange={(option) => handlePaymentChange(index, 'account_id', option.value)}
+                                                    value={payment.account_id}
+                                                    required={true}
+                                                    errorMsg={errors[`payments.${index}.account_id`]}
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {payment.method === 'cheque' && (
+                                        <div
+                                            className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 mt-2 bg-gray-50 p-3 rounded'>
+                                            <div>
+                                                <InputLabel>Cheque Number</InputLabel>
+                                                <TextInput
+                                                    type="text"
+                                                    value={payment.cheque_number}
+                                                    onChange={(e) => handlePaymentChange(index, 'cheque_number', e.target.value)}
+                                                    placeholder="Enter cheque number"
+                                                    className="w-full"
+                                                    required
+                                                />
+                                                <InputError message={errors[`payments.${index}.cheque_number`]}/>
+                                            </div>
+                                            <div>
+                                                <InputSelect
+                                                    id="bank_name"
+                                                    label="Bank Name"
+                                                    options={bankOptions}
+                                                    value={payment.bank_name}
+                                                    // onChange={(e) => handlePaymentChange(index, 'bank_name', e.target.value)}
+                                                    onChange={(option) => handlePaymentChange(index,'bank_name', option ? option.value : '')}
+                                                    error={!!errors.bank_name}
+                                                    required={true}
+                                                    errorMsg={errors.bank_name}
+                                                    className="w-full"
+                                                />
+                                                <InputError message={errors[`payments.${index}.bank_name`]}/>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+
+                            {data.payments.length > 0 && (
+                                <div className='flex justify-between p-3 bg-gray-100 rounded-md mt-2'>
+                                    <div className='font-medium'>Payment Summary</div>
+                                    <div className='text-right'>
+                                        <div>Total Purchase: {calculateTotalAmount().toLocaleString()} Rs.</div>
+                                        <div>Total Paid: {calculateTotalPaymentAmount().toLocaleString()} Rs.</div>
+                                        <div
+                                            className={getRemainingBalance() > 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}>
+                                            {getRemainingBalance() > 0
+                                                ? `Remaining: ${getRemainingBalance().toLocaleString()} Rs.`
+                                                : 'Fully Paid'}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </>
                 )}
 
                 <Button

@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/react";
 import Select from 'react-select';
 import InputLabel from "@/Components/InputLabel.jsx";
 
-const InputSelect = ({ id, label, options, value, onChange, error, required, errorMsg, link, linkText, className, isMulti = false }) => {
+const InputSelect = ({ id, label, options = [], value, onChange, error, required, errorMsg, link, linkText, className, isMulti = false }) => {
 
     const customStyles = {
         control: (provided, state) => ({

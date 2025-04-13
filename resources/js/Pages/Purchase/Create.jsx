@@ -8,10 +8,10 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 const Create = ({
                     products,
+                    accounts,
                     suppliers,
                     productSizes,
                 }) => {
-    console.log(products, 'products')
     return (
         <AuthenticatedLayout
             header={
@@ -24,7 +24,12 @@ const Create = ({
             }
         >
             <Head title="Purchases"/>
-            <PurchaseForm products={products} productSizes={productSizes} suppliers={suppliers} />
+            <PurchaseForm
+                products={products}
+                productSizes={productSizes}
+                suppliers={suppliers}
+                accounts={accounts}
+            />
         </AuthenticatedLayout>
     );
 };
