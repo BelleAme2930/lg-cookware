@@ -60,7 +60,7 @@ const PurchaseDetails = ({ purchase }) => {
                 ))}
             </div>,
             quantity: `${group.totalQuantity} Pcs.`,
-            weight: `${group.weight} KG`,
+            weight: `${group.weight.toFixed(2)} KG`,
             unit_price: `${group.sizes[0].unitPrice} Rs.`,
             total_price: `${calculatedTotalPrice.toLocaleString()} Rs.`
         };
