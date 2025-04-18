@@ -185,6 +185,10 @@ const PurchaseForm = ({purchase, suppliers, products, accounts}) => {
         return Math.max(0, total - paid);
     };
 
+    useEffect(() => {
+        getRemainingBalance();
+    }, [data]);
+
     const handleAddPayment = () => {
         const newPayment = {
             method: 'cash',
@@ -217,6 +221,28 @@ const PurchaseForm = ({purchase, suppliers, products, accounts}) => {
             total_amount: calculateTotalAmount()
         }));
     }, [data.products]);
+
+    useEffect(() => {
+        // Update remaining balance for credit payments when payment amounts change
+        if (data.payments.length > 0) {
+            const updatedPayments = data.payments.map(payment => {
+                if (payment.method === 'credit') {
+                    return { ...payment, remaining_balance: getRemainingBalance().toString() };
+                }
+                return payment;
+            });
+
+            // Only update if there's a difference to avoid infinite loops
+            const needsUpdate = updatedPayments.some((payment, i) =>
+                payment.method === 'credit' &&
+                payment.remaining_balance !== data.payments[i].remaining_balance
+            );
+
+            if (needsUpdate) {
+                setData('payments', updatedPayments);
+            }
+        }
+    }, [data.products, data.payments]);
 
     const handleSubmit = (e) => {
         e.preventDefault();

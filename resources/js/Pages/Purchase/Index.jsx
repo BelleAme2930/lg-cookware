@@ -32,7 +32,7 @@ const Index = ({purchases}) => {
         {name: "ID", selector: (row) => row.id},
         {name: "Purchase Date", selector: (row) => row.purchase_date},
         {name: "Total Items", selector: (row) => row.items_count},
-        {name: "Total Price", selector: (row) => row.total_amount + ' Rs.'},
+        {name: "Total Price", selector: (row) => row.total_amount_formatted + ' Rs.'},
         {
             name: "Actions",
             selector: (row) => (

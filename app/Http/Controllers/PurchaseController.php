@@ -63,8 +63,6 @@ class PurchaseController extends Controller
             foreach ($request->products as $productData) {
                 $product = Product::find($productData['product_id']);
 
-                $batchId = Str::uuid()->toString();
-
                 foreach ($productData['sizes'] as $sizeData) {
                     $purchase->items()->create([
                         'product_id' => $product->id,
@@ -73,7 +71,6 @@ class PurchaseController extends Controller
                         'unit_price' => $sizeData['price'],
                         'weight' => $product->type === ProductTypeEnum::Weight ? WeightHelper::toGrams($sizeData['weight']) : null,
                         'total_price' => $product->type === ProductTypeEnum::Weight ? $sizeData['weight'] * $sizeData['price'] : $sizeData['quantity'] * $sizeData['price'],
-                        'batch_id' => $batchId,
                     ]);
                 }
             }
