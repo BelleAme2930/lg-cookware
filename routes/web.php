@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerLedgerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProductController;
@@ -30,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/filtered-sale', [SaleController::class, 'filteredData'])->name('sales.filteredData');
     Route::get('/suppliers/ledger', [SupplierLedgerController::class, 'index'])->name('supplier.ledger.index');
     Route::get('suppliers/{supplier}/ledger', [SupplierLedgerController::class, 'show'])->name('supplier.ledger.show');
+    Route::get('/customers/ledger', [CustomerLedgerController::class, 'index'])->name('customer.ledger.index');
+    Route::get('customers/{customer}/ledger', [CustomerLedgerController::class, 'show'])->name('customer.ledger.show');
 
     Route::resources([
         'categories' => CategoryController::class,

@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Head } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Title from "@/Components/Title.jsx";
-import { FaChevronDown, FaChevronRight, FaPrint, FaArrowLeft } from "react-icons/fa";
+import {FaChevronDown, FaChevronRight, FaPrint, FaArrowLeft, FaEdit} from "react-icons/fa";
 import IconButton from "@/Components/IconButton.jsx";
 import IconLink from "@/Components/IconLink.jsx";
 import Table from "@/Components/Table";
+import LinkButton from "@/Components/LinkButton.jsx";
+import Button from "@/Components/Button.jsx";
 
-const LedgerShow = ({ supplier, ledgerEntries }) => {
+const LedgerShow = ({ customer, ledgerEntries }) => {
     const [expandedRows, setExpandedRows] = useState({});
 
     const toggleRow = (id) => {
@@ -17,7 +19,7 @@ const LedgerShow = ({ supplier, ledgerEntries }) => {
         }));
     };
 
-    const purchaseEntries = ledgerEntries.filter(entry => entry.type === 'purchase');
+    const saleEntries = ledgerEntries.filter(entry => entry.type === 'sale');
 
     const printLedger = () => {
         window.print();
@@ -32,7 +34,7 @@ const LedgerShow = ({ supplier, ledgerEntries }) => {
             credit: entry.credit > 0 ? entry.credit.toLocaleString() + ' Rs.' : '-',
             balance: `${(Math.abs(entry.balance).toLocaleString() + ' Rs.')}`,
             type: `${entry.balance > 0 ? 'Debit' : 'Credit'}`,
-            actions: entry.type === 'purchase' ? (
+            actions: entry.type === 'sale' ? (
                 <button
                     onClick={() => toggleRow(entry.id)}
                     className="w-full print:hidden justify-center text-blue-500 hover:text-blue-700 focus:outline-none flex items-center"
@@ -55,48 +57,45 @@ const LedgerShow = ({ supplier, ledgerEntries }) => {
         <AuthenticatedLayout
             header={
                 <div className="flex justify-between items-center print:hidden">
-                    <Title title={`${supplier.name} - Ledger`} />
-                    <div className="flex gap-2">
-                        <IconLink
-                            icon={<FaArrowLeft />}
-                            href={route("supplier.ledger.index")}
-                            label="Back to Suppliers"
-                        />
-                        <IconButton
-                            icon={<FaPrint />}
-                            onClick={printLedger}
-                        />
+                    <Title title={`${customer.name} - Ledger`}/>
+                    <div className='flex items-center gap-2'>
+                        <Button onClick={printLedger} icon={<FaPrint/>}>
+                            Print
+                        </Button>
+                        <LinkButton href={route('customer.ledger.index')} icon={<FaArrowLeft/>}>
+                            Back to List
+                        </LinkButton>
                     </div>
                 </div>
             }
         >
-            <Head title={`${supplier.name} - Ledger`} />
+            <Head title={`${customer.name} - Ledger`}/>
 
             <div className="p-4 bg-white shadow-sm rounded-lg mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <h3 className="text-lg font-semibold mb-2">Supplier Details</h3>
+                        <h3 className="text-lg font-semibold mb-2">Customer Details</h3>
                         <div className="space-y-1">
-                            <p><span className="font-medium">Name:</span> {supplier.name}</p>
-                            <p><span className="font-medium">Phone:</span> {supplier.phone}</p>
-                            <p><span className="font-medium">Email:</span> {supplier.email || "N/A"}</p>
-                            <p><span className="font-medium">Address:</span> {supplier.address || "N/A"}</p>
+                        <p><span className="font-medium">Name:</span> {customer.name}</p>
+                            <p><span className="font-medium">Phone:</span> {customer.phone}</p>
+                            <p><span className="font-medium">Email:</span> {customer.email || "N/A"}</p>
+                            <p><span className="font-medium">Address:</span> {customer.address || "N/A"}</p>
                         </div>
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold mb-2">Balance Summary</h3>
                         <div className="space-y-1">
                             <p>
-                                <span className="font-medium">Opening Balance:</span> {(supplier.opening_balance.toLocaleString())} Rs.
+                                <span className="font-medium">Opening Balance:</span> {(customer.opening_balance.toLocaleString())} Rs.
                             </p>
                             <p>
                                 <span className="font-medium">Current Balance:</span>{" "}
-                                <span className={supplier.current_balance > 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
-                                    {(supplier.current_balance.toLocaleString())} Rs.
+                                <span className={customer.current_balance > 0 ? "text-red-600 font-medium" : "text-green-600 font-medium"}>
+                                    {(customer.current_balance.toLocaleString())} Rs.
                                 </span>
                             </p>
                             <p>
-                                <span className="font-medium">Total Purchases:</span> {purchaseEntries.length}
+                                <span className="font-medium">Total Sales:</span> {saleEntries.length}
                             </p>
                         </div>
                     </div>
@@ -108,9 +107,9 @@ const LedgerShow = ({ supplier, ledgerEntries }) => {
                 <Table headers={ledgerHeaders} data={ledgerData} />
 
                 {ledgerEntries.map((entry) => {
-                    if (entry.type === 'purchase' && expandedRows[entry.id] && entry.purchase_data) {
-                        const purchaseItemHeaders = ["Product", "Quantity", "Weight", "Unit Price", "Total"];
-                        const purchaseItemData = entry.purchase_data.items.map(item => ({
+                    if (entry.type === 'sale' && expandedRows[entry.id] && entry.sale_data) {
+                        const saleItemHeaders = ["Product", "Quantity", "Weight", "Unit Price", "Total"];
+                        const saleItemData = entry.sale_data.items.map(item => ({
                             product: `${item.product_size.product.name} - ${item.product_size.name}`,
                             quantity: item.quantity + ' Rs.',
                             weight: item.weight + ' KG' || '-',
@@ -120,14 +119,14 @@ const LedgerShow = ({ supplier, ledgerEntries }) => {
 
                         return (
                             <div key={`details-${entry.id}`} className="mt-4 mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <h4 className="font-medium mb-2">Purchase Details - {entry.purchase_data.purchase_date}</h4>
-                                <p className="mb-4"><span className="font-medium">Notes:</span> {entry.purchase_data.notes || 'N/A'}</p>
+                                <h4 className="font-medium mb-2">Sale Details - {entry.sale_data.sale_date}</h4>
+                                <p className="mb-4"><span className="font-medium">Notes:</span> {entry.sale_data.notes || 'N/A'}</p>
 
                                 <h5 className="font-medium mb-2">Items</h5>
-                                <Table headers={purchaseItemHeaders} data={purchaseItemData} />
+                                <Table headers={saleItemHeaders} data={saleItemData} />
 
                                 <div className="mt-2 text-right">
-                                    <p className="font-medium">Total Amount: {(entry.purchase_data.total_amount_formatted)} Rs.</p>
+                                    <p className="font-medium">Total Amount: {(entry.sale_data.total_amount_formatted)} Rs.</p>
                                 </div>
                             </div>
                         );

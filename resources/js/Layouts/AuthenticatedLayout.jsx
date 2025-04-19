@@ -6,7 +6,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+            <nav className="border-b border-gray-100 bg-white print:hidden">
                 <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
@@ -75,7 +75,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                     href={route('supplier.ledger.index')}
                                     active={route().current('supplier.ledger.index')}
                                 >
-                                    Purchase Ledgers
+                                    Supplier Ledgers
+                                </NavLink>
+                                <NavLink
+                                    href={route('customer.ledger.index')}
+                                    active={route().current('customer.ledger.index')}
+                                >
+                                    Customer Ledgers
                                 </NavLink>
                             </div>
                         </div>

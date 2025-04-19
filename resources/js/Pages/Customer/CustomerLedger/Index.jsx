@@ -6,7 +6,7 @@ import Title from "@/Components/Title.jsx";
 import {FaEye} from "react-icons/fa";
 import IconLink from "@/Components/IconLink.jsx";
 
-const Index = ({ suppliers }) => {
+const Index = ({ customers }) => {
     const columns = [
         { name: "ID", selector: (row) => row.id },
         { name: "Name", selector: (row) => row.name },
@@ -14,7 +14,7 @@ const Index = ({ suppliers }) => {
         {
             name: "Current Balance",
             selector: (row) => (
-                <span className={row.current_balance > 0 ? "text-green-600" : "text-red-600"}>
+                <span className={row.current_balance > 0 ? "text-red-600" : "text-green-600"}>
                     {row.current_balance.toLocaleString()} Rs.
                 </span>
             )
@@ -31,7 +31,7 @@ const Index = ({ suppliers }) => {
             name: "Actions",
             selector: (row) => (
                 <div className="flex items-center gap-2">
-                    <IconLink icon={<FaEye />} href={route("supplier.ledger.show", row.id)} tooltip="View Ledger" />
+                    <IconLink icon={<FaEye />} href={route("customer.ledger.show", row.id)} tooltip="View Ledger" />
                 </div>
             ),
         },
@@ -41,16 +41,16 @@ const Index = ({ suppliers }) => {
         <AuthenticatedLayout
             header={
                 <div className="flex justify-between items-center">
-                    <Title title="Supplier Ledgers" />
+                    <Title title="Customer Ledgers" />
                 </div>
             }
         >
-            <Head title="Supplier Ledgers" />
+            <Head title="Customer Ledgers" />
             <div className="p-2 bg-gray-100">
                 <CustomDataTable
                     columns={columns}
-                    data={suppliers}
-                    title="Supplier Ledgers"
+                    data={customers}
+                    title="Customer Ledgers"
                     filterColumns={["name", "phone"]}
                 />
             </div>
