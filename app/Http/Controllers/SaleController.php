@@ -245,10 +245,10 @@ class SaleController extends Controller
     public function filteredData(Request $request)
     {
         $paymentMethod = $request->get('method');
-        $purchases = (new SaleWidget())->getFilteredSales($paymentMethod);
+        $sales = (new SaleWidget())->getFilteredSales($paymentMethod);
 
         return Inertia::render('Sale/Partials/FilteredSale', [
-            'purchases' => SaleResource::collection($purchases),
+            'sales' => SaleResource::collection($sales),
             'filters' => [
                 'method' => $paymentMethod
             ]
