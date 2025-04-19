@@ -4,14 +4,15 @@ import { Head } from '@inertiajs/react';
 import OverviewWidget from "@/Pages/Dashboard/OverviewWidget.jsx";
 import { FaSync } from "react-icons/fa";
 import ProfitWidget from "@/Pages/Dashboard/ProfitWidget.jsx";
+import ExpenseWidget from "@/Pages/Dashboard/ExpenseWidget.jsx";
+import Title from "@/Components/Title.jsx";
 
-export default function Dashboard({ auth, purchaseStats, saleStats, profitStats }) {
+export default function Dashboard({ auth, purchaseStats, saleStats, profitStats, expenseStats }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const handleRefresh = () => {
         setIsRefreshing(true);
-        // Add your refresh logic here
-        setTimeout(() => setIsRefreshing(false), 800); // Simulate refresh delay
+        setTimeout(() => setIsRefreshing(false), 800);
     };
 
     return (
@@ -19,9 +20,7 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats 
             user={auth.user}
             header={
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Dashboard
-                    </h2>
+                    <Title title='Dashboard' />
                     <div className="flex items-center space-x-2 text-sm">
                         <span className="text-gray-500">Last updated: {new Date().toLocaleString()}</span>
                         <button
@@ -53,8 +52,9 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats 
                         colorTheme="blue"
                     />
                 </div>
-                <div className="w-full sm:w-1/3">
+                <div className="w-full sm:w-1/3 flex flex-col justify-between">
                     <ProfitWidget stats={profitStats} />
+                    <ExpenseWidget stats={expenseStats} />
                 </div>
             </div>
 
