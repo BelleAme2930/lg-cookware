@@ -73,6 +73,15 @@ class PurchaseController extends Controller
                         'weight' => $product->type === ProductTypeEnum::Weight ? WeightHelper::toGrams($sizeData['weight']) : null,
                         'total_price' => $product->type === ProductTypeEnum::Weight ? $sizeData['weight'] * $sizeData['price'] : $sizeData['quantity'] * $sizeData['price'],
                     ]);
+
+                    $productSize = ProductSize::find($sizeData['value']);
+                    if ($productSize) {
+                        $productSize->quantity += $sizeData['quantity'];
+                        if ($product->type === ProductTypeEnum::Weight) {
+                            $productSize->weight += WeightHelper::toGrams($sizeData['weight']);
+                        }
+                        $productSize->save();
+                    }
                 }
             }
 
@@ -193,6 +202,15 @@ class PurchaseController extends Controller
                             ? $sizeData['weight'] * $sizeData['price']
                             : $sizeData['quantity'] * $sizeData['price'],
                     ]);
+                }
+
+                $productSize = ProductSize::find($sizeData['value']);
+                if ($productSize) {
+                    $productSize->quantity += $sizeData['quantity'];
+                    if ($product->type === ProductTypeEnum::Weight) {
+                        $productSize->weight += WeightHelper::toGrams($sizeData['weight']);
+                    }
+                    $productSize->save();
                 }
             }
 

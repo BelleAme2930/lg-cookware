@@ -109,6 +109,10 @@ class SaleController extends Controller
                 throw new \Exception('Total payment amount exceeds sale total.');
             }
 
+            $customer = Customer::find($request->customer);
+            $customer->current_balance += ($request->total_amount - $totalPaymentAmount);
+            $customer->save();
+
             DB::commit();
             return redirect()->route('sales.index')
                 ->with('success', 'Sale created successfully');
@@ -159,6 +163,13 @@ class SaleController extends Controller
         DB::beginTransaction();
 
         try {
+
+            $oldTotal = $sale->getOriginal('total_amount');
+            $oldPayments = $sale->payments()->sum('amount');
+            $customer = Customer::find($sale->customer_id);
+
+            $customer->current_balance -= ($oldTotal - $oldPayments);
+
             $sale->update([
                 'customer_id' => $request->customer,
                 'sale_date' => $request->sale_date,
@@ -183,9 +194,11 @@ class SaleController extends Controller
                 }
             }
 
+            $totalPaymentAmount = 0;
             $sale->payments()->delete();
+
             foreach ($request->payments as $paymentData) {
-                $sale->payments()->create([
+                $payment = [
                     'method' => $paymentData['method'],
                     'amount' => $paymentData['amount'],
                     'payment_date' => $paymentData['payment_date'],
@@ -195,8 +208,19 @@ class SaleController extends Controller
                     'account_id' => $paymentData['account_id'] ?? null,
                     'cheque_number' => $paymentData['cheque_number'] ?? null,
                     'bank_name' => $paymentData['bank_name'] ?? null,
-                ]);
+                ];
+
+                $sale->payments()->create($payment);
+                $totalPaymentAmount += $paymentData['amount'];
             }
+
+            if ($totalPaymentAmount > $request->total_amount) {
+                throw new \Exception('Total payment amount exceeds sale total.');
+            }
+
+            $customer->current_balance += ($request->total_amount - $totalPaymentAmount);
+            $customer->save();
+
 
             DB::commit();
             return redirect()->route('sales.index')

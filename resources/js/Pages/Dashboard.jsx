@@ -18,6 +18,7 @@ import StatWidget from "@/Pages/Dashboard/General/StatWidget.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 import PaymentSummaryWidget from "@/Pages/Dashboard/General/PaymentSummaryWidget.jsx";
 import Table from "@/Components/Table.jsx";
+import InventoryStatusWidget from "@/Pages/Dashboard/Inventory/InventoryStatusWidget.jsx";
 
 export default function Dashboard({
                                       auth,
@@ -28,6 +29,7 @@ export default function Dashboard({
                                       quickStats,
                                       todaysReceivables,
                                       todaysPayables,
+                                      inventoryStats,
                                   }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -162,6 +164,11 @@ export default function Dashboard({
                     <ExpenseWidget stats={expenseStats}/>
                 </div>
             </div>
+
+            <div>
+                <InventoryStatusWidget stats={inventoryStats} />
+            </div>
+
             <div className="mt-6 flex flex-col md:flex-row gap-4">
                 <div className="w-full md:w-1/2">
                     <ShadowBox>

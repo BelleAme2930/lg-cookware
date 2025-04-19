@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\Purchase;
-use App\Models\Sale;
-use App\Models\Supplier;
 use App\Modules\Expense\ExpenseWidget;
+use App\Modules\Inventory\InventoryStatusWidget;
 use App\Modules\PayableReceivable\PayableReceivableWidget;
 use App\Modules\Profit\ProfitWidget;
 use App\Modules\Purchase\PurchaseWidget;
 use App\Modules\QuickStats\QuickStatsWidget;
 use App\Modules\Sale\SaleWidget;
-use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -25,7 +19,7 @@ class DashboardController extends Controller
     protected ExpenseWidget $expenseWidget;
     protected QuickStatsWidget $quickStatsWidget;
     protected PayableReceivableWidget $payableReceivableWidget;
-
+    protected InventoryStatusWidget $inventoryStatusWidget;
 
     public function __construct(
         PurchaseWidget $purchaseWidget,
@@ -34,6 +28,7 @@ class DashboardController extends Controller
         ExpenseWidget $expenseWidget,
         QuickStatsWidget $quickStatsWidget,
         PayableReceivableWidget $payableReceivableWidget,
+        InventoryStatusWidget $inventoryStatusWidget,
     )
     {
         $this->purchaseWidget = $purchaseWidget;
@@ -42,6 +37,7 @@ class DashboardController extends Controller
         $this->expenseWidget = $expenseWidget;
         $this->quickStatsWidget = $quickStatsWidget;
         $this->payableReceivableWidget = $payableReceivableWidget;
+        $this->inventoryStatusWidget = $inventoryStatusWidget;
     }
 
     public function index()
@@ -54,6 +50,7 @@ class DashboardController extends Controller
         $quickStats = $this->quickStatsWidget->getQuickStats();
         $todaysReceivables = $this->payableReceivableWidget->getTodaysReceivables();
         $todaysPayables = $this->payableReceivableWidget->getTodaysPayables();
+        $inventoryStats = $this->inventoryStatusWidget->getInventoryStats();
 
         return Inertia::render('Dashboard', [
             'purchaseStats' => $purchaseStats,
@@ -63,6 +60,7 @@ class DashboardController extends Controller
             'quickStats' => $quickStats,
             'todaysReceivables' => $todaysReceivables,
             'todaysPayables' => $todaysPayables,
+            'inventoryStats' => $inventoryStats,
         ]);
     }
 }
