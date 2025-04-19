@@ -39,6 +39,8 @@ export default {
         'text-green-500',
         'text-blue-500',
         'text-red-500',
+        'w-12',
+        'bg-opacity-60',
     ],
 
     plugins: [forms],
