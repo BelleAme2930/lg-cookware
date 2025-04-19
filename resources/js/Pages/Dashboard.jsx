@@ -3,8 +3,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import OverviewWidget from "@/Pages/Dashboard/OverviewWidget.jsx";
 import { FaSync } from "react-icons/fa";
+import ProfitWidget from "@/Pages/Dashboard/ProfitWidget.jsx";
 
-export default function Dashboard({ auth, purchaseStats, saleStats }) {
+export default function Dashboard({ auth, purchaseStats, saleStats, profitStats }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const handleRefresh = () => {
@@ -51,6 +52,9 @@ export default function Dashboard({ auth, purchaseStats, saleStats }) {
                         stats={saleStats}
                         colorTheme="blue"
                     />
+                </div>
+                <div className="w-full sm:w-1/3">
+                    <ProfitWidget stats={profitStats} />
                 </div>
             </div>
 
