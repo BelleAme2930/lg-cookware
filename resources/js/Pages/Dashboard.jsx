@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head} from '@inertiajs/react';
-import PurchasesOverviewWidget from "@/Pages/Dashboard/PurchasesOverviewWidget.jsx";
-import {FaSync} from "react-icons/fa";
+import { Head } from '@inertiajs/react';
+import OverviewWidget from "@/Pages/Dashboard/OverviewWidget.jsx";
+import { FaSync } from "react-icons/fa";
 
-export default function Dashboard({auth, purchaseStats}) {
+export default function Dashboard({ auth, purchaseStats, saleStats }) {
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const handleRefresh = () => {
+        setIsRefreshing(true);
+        // Add your refresh logic here
+        setTimeout(() => setIsRefreshing(false), 800); // Simulate refresh delay
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -18,8 +26,10 @@ export default function Dashboard({auth, purchaseStats}) {
                         <button
                             className="p-2 rounded-full hover:bg-gray-100"
                             title="Refresh Dashboard"
+                            onClick={handleRefresh}
+                            disabled={isRefreshing}
                         >
-                            <FaSync className="text-gray-500"/>
+                            <FaSync className={`text-gray-500 ${isRefreshing ? 'animate-spin' : ''}`}/>
                         </button>
                     </div>
                 </div>
@@ -27,12 +37,38 @@ export default function Dashboard({auth, purchaseStats}) {
         >
             <Head title="Dashboard"/>
 
-            <div className="flex py-6">
-                <div className="w-1/2">
-                    <PurchasesOverviewWidget
-                        title="Purchases Overview"
+            <div className="flex flex-col md:flex-row py-6 gap-4">
+                <div className="w-full sm:w-1/3">
+                    <OverviewWidget
+                        title="Purchases"
                         stats={purchaseStats}
+                        colorTheme="orange"
                     />
+                </div>
+                <div className="w-full sm:w-1/3">
+                    <OverviewWidget
+                        title="Sales"
+                        stats={saleStats}
+                        colorTheme="blue"
+                    />
+                </div>
+            </div>
+
+            {/* Add additional widgets or components */}
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-4 rounded-lg shadow">
+                    <h3 className="text-lg font-medium mb-3">Recent Transactions</h3>
+                    <p className="text-gray-500">No recent transactions</p>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg shadow">
+                    <h3 className="text-lg font-medium mb-3">Top Products</h3>
+                    <p className="text-gray-500">No data available</p>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg shadow">
+                    <h3 className="text-lg font-medium mb-3">Revenue Trends</h3>
+                    <p className="text-gray-500">No data available</p>
                 </div>
             </div>
         </AuthenticatedLayout>

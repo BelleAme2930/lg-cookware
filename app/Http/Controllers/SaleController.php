@@ -15,6 +15,8 @@ use App\Models\Product;
 use App\Models\ProductSize;
 use App\Models\Sale;
 use App\Models\Customer;
+use App\Modules\Sale\SaleWidget;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -238,6 +240,19 @@ class SaleController extends Controller
             return redirect()->route('sales.index')
                 ->with('error', 'Error occurred while deleting sale: ' . $e->getMessage());
         }
+    }
+
+    public function filteredData(Request $request)
+    {
+        $paymentMethod = $request->get('method');
+        $purchases = (new SaleWidget())->getFilteredSales($paymentMethod);
+
+        return Inertia::render('Sale/Partials/FilteredSale', [
+            'purchases' => SaleResource::collection($purchases),
+            'filters' => [
+                'method' => $paymentMethod
+            ]
+        ]);
     }
 
 }
