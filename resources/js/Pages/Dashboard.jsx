@@ -54,23 +54,6 @@ export default function Dashboard({ auth, purchaseStats, saleStats }) {
                 </div>
             </div>
 
-            {/* Add additional widgets or components */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <h3 className="text-lg font-medium mb-3">Recent Transactions</h3>
-                    <p className="text-gray-500">No recent transactions</p>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <h3 className="text-lg font-medium mb-3">Top Products</h3>
-                    <p className="text-gray-500">No data available</p>
-                </div>
-
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <h3 className="text-lg font-medium mb-3">Revenue Trends</h3>
-                    <p className="text-gray-500">No data available</p>
-                </div>
-            </div>
         </AuthenticatedLayout>
     );
 }
