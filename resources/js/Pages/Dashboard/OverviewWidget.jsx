@@ -33,7 +33,7 @@ export default function OverviewWidget({
                 </div>
 
                 {Object.keys(stats).filter(key => key !== 'total').map((key) => (
-                    <div key={key} className="bg-white rounded-lg p-4 mb-4 text-gray-800 shadow-sm hover:shadow-md transition-shadow">
+                    <div key={key} className="bg-white rounded-lg p-4 mb-5 text-gray-800 shadow-sm hover:shadow-md transition-shadow">
                         <Link href={stats[key].route || '#'} className="flex justify-between items-center">
                             <div className="flex items-center">
                                 {FaIcons[stats[key].icon] ? (

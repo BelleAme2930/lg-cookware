@@ -4,7 +4,7 @@ import * as FaIcons from "react-icons/fa";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 
 export default function ProfitWidget({ stats }) {
-    const { value, totalSales, totalPurchases } = stats;
+    const { value, totalSales, totalPurchases, totalExpenses } = stats;
     const isProfit = value >= 0;
 
     const bgGradient = isProfit
@@ -29,7 +29,7 @@ export default function ProfitWidget({ stats }) {
                 </div>
             </div>
 
-            <div className="mt-4 space-y-1 text-sm text-gray-700">
+            <div className="mt-3 space-y-1 text-sm text-gray-700">
                 <div className="flex justify-between">
                     <span>Total Sales:</span>
                     <span className="font-semibold">{totalSales} Rs</span>
@@ -37,6 +37,10 @@ export default function ProfitWidget({ stats }) {
                 <div className="flex justify-between">
                     <span>Total Purchases:</span>
                     <span className="font-semibold">{totalPurchases} Rs</span>
+                </div>
+                <div className="flex justify-between">
+                    <span>Total Expenses:</span>
+                    <span className="font-semibold">{totalExpenses} Rs</span>
                 </div>
             </div>
         </ShadowBox>

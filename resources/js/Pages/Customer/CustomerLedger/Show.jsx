@@ -119,7 +119,7 @@ const LedgerShow = ({ customer, ledgerEntries }) => {
 
                         return (
                             <div key={`details-${entry.id}`} className="mt-4 mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <h4 className="font-medium mb-2">Sale Details - {entry.sale_data.sale_date}</h4>
+                                <h4 className="font-medium mb-2">Sale Details - {entry.sale_data.sale_date_display}</h4>
                                 <p className="mb-4"><span className="font-medium">Notes:</span> {entry.sale_data.notes || 'N/A'}</p>
 
                                 <h5 className="font-medium mb-2">Items</h5>
