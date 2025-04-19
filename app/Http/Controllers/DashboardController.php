@@ -7,16 +7,16 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    protected PurchaseWidget $purchaseWidgetService;
+    protected PurchaseWidget $purchaseWidget;
 
-    public function __construct(PurchaseWidget $purchaseWidgetService)
+    public function __construct(PurchaseWidget $purchaseWidget)
     {
-        $this->purchaseWidgetService = $purchaseWidgetService;
+        $this->purchaseWidget = $purchaseWidget;
     }
 
     public function index()
     {
-        $purchaseStats = $this->purchaseWidgetService->getPurchaseStats();
+        $purchaseStats = $this->purchaseWidget->getPurchaseStats();
 
         return Inertia::render('Dashboard', [
             'purchaseStats' => $purchaseStats
