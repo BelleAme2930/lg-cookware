@@ -15,6 +15,7 @@ use App\Models\Product;
 use App\Models\ProductSize;
 use App\Models\Purchase;
 use App\Models\Supplier;
+use App\Modules\Purchase\PurchaseWidget;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -242,4 +243,16 @@ class PurchaseController extends Controller
         }
     }
 
+    public function filteredData(Request $request)
+    {
+        $paymentMethod = $request->get('method');
+        $purchases = (new PurchaseWidget())->getFilteredPurchases($paymentMethod);
+
+        return Inertia::render('Purchase/Partials/FilteredPurchase', [
+            'purchases' => PurchaseResource::collection($purchases),
+            'filters' => [
+                'method' => $paymentMethod
+            ]
+        ]);
+    }
 }

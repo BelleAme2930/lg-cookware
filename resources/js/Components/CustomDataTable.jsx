@@ -16,7 +16,7 @@ const CustomDataTable = ({ columns, data, title, filterColumns = [] }) => {
     return (
         <ShadowBox>
             <div className='flex items-center justify-between gap-4 mb-4 p-4 bg-gray-100 rounded-lg'>
-                <Title title={title} />
+                <Title className='capitalize' title={title} />
                 <TextInput
                     type="text"
                     placeholder="Search..."

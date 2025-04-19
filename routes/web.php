@@ -25,6 +25,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/purchases/filtered-data', [PurchaseController::class, 'filteredData'])->name('purchases.filteredData');
+
     Route::resources([
         'categories' => CategoryController::class,
         'accounts' => AccountController::class,

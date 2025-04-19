@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\PaymentMethodEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Payment extends Model
 {
@@ -28,31 +30,13 @@ class Payment extends Model
         'due_date' => 'date',
     ];
 
-    public function payable()
+    public function payable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function account()
+    public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
-    }
-
-    public function isFullyPaid(): bool
-    {
-        if ($this->method === PaymentMethodEnum::CREDIT) {
-            return $this->remaining_balance <= 0;
-        }
-
-        return true;
-    }
-
-    public function isDue(): bool
-    {
-        if ($this->method === PaymentMethodEnum::CREDIT && $this->due_date) {
-            return $this->due_date->isPast() && $this->remaining_balance > 0;
-        }
-
-        return false;
     }
 }
