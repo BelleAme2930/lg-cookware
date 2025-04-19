@@ -24,7 +24,7 @@ const Table = ({headers, data}) => {
                 ))
             ) : (
                 <tr>
-                    <td colSpan={headers.length} className="border border-gray-300 p-4 text-center text-gray-500">
+                    <td colSpan={headers.length} className="border border-gray-300 p-2 text-center text-gray-500">
                         No data available
                     </td>
                 </tr>

@@ -13,8 +13,8 @@ export default function ProfitWidget({ stats }) {
 
     return (
         <ShadowBox className="px-4">
-            <div className="py-4 text-gray-700">
-                <h2 className="text-2xl">Profit</h2>
+            <div className="py-2 text-gray-700">
+                <h2 className="text-xl mb-2">Profit</h2>
             </div>
             <div className={`rounded-lg p-4 text-white bg-gradient-to-r ${bgGradient}`}>
                 <div className="flex items-center justify-between">

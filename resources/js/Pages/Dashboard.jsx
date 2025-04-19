@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import {Head} from '@inertiajs/react';
 import OverviewWidget from "@/Pages/Dashboard/OverviewWidget.jsx";
 import {
     FaBoxOpen,
@@ -17,8 +17,18 @@ import Title from "@/Components/Title.jsx";
 import StatWidget from "@/Pages/Dashboard/General/StatWidget.jsx";
 import ShadowBox from "@/Components/ShadowBox.jsx";
 import PaymentSummaryWidget from "@/Pages/Dashboard/General/PaymentSummaryWidget.jsx";
+import Table from "@/Components/Table.jsx";
 
-export default function Dashboard({ auth, purchaseStats, saleStats, profitStats, expenseStats, quickStats }) {
+export default function Dashboard({
+                                      auth,
+                                      purchaseStats,
+                                      saleStats,
+                                      profitStats,
+                                      expenseStats,
+                                      quickStats,
+                                      todaysReceivables,
+                                      todaysPayables,
+                                  }) {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const handleRefresh = () => {
@@ -31,7 +41,7 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats,
             user={auth.user}
             header={
                 <div className="flex justify-between items-center">
-                    <Title title='Dashboard'/>
+                    <Title title={`Welcome, ${auth.user.name}!`}/>
                     <div className="flex items-center space-x-2 text-sm">
                         <span className="text-gray-500">Last updated: {new Date().toLocaleString()}</span>
                         <button
@@ -113,7 +123,7 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats,
                             amount={quickStats.todaysReceivables.amount}
                             count={quickStats.todaysReceivables.count}
                             extra={`from ${quickStats.todaysReceivables.uniqueCustomers} Customers`}
-                            icon={<FaMoneyBillWave className="text-cyan-900" />}
+                            icon={<FaMoneyBillWave className="text-cyan-900"/>}
                             bgColor="bg-cyan-100"
                             textColor="text-cyan-900"
                         />
@@ -123,7 +133,7 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats,
                             amount={quickStats.todaysPayables.amount}
                             count={quickStats.todaysPayables.count}
                             extra={`to ${quickStats.todaysPayables.uniqueSuppliers} Suppliers`}
-                            icon={<FaMoneyCheckAlt className="text-violet-900" />}
+                            icon={<FaMoneyCheckAlt className="text-violet-900"/>}
                             bgColor="bg-violet-100"
                             textColor="text-violet-900"
                         />
@@ -132,7 +142,7 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats,
             </div>
 
 
-            <div className="flex flex-col md:flex-row py-6 gap-4">
+            <div className="flex flex-col md:flex-row pt-6 gap-4">
                 <div className="w-full sm:w-1/3">
                     <OverviewWidget
                         title="Purchases"
@@ -152,6 +162,31 @@ export default function Dashboard({ auth, purchaseStats, saleStats, profitStats,
                     <ExpenseWidget stats={expenseStats}/>
                 </div>
             </div>
+            <div className="mt-6 flex flex-col md:flex-row gap-4">
+                <div className="w-full md:w-1/2">
+                    <ShadowBox>
+                        <div className="py-2 text-gray-700">
+                            <h2 className="text-xl mb-2">Today's Receivables</h2>
+                        </div>
+                        <Table
+                            headers={['Customer', 'Amount', 'Remaining', 'Date']}
+                            data={todaysReceivables}
+                        />
+                    </ShadowBox>
+                </div>
+                <div className="w-full md:w-1/2">
+                    <ShadowBox>
+                        <div className="py-2 text-gray-700">
+                            <h2 className="text-xl mb-2">Today's Payables</h2>
+                        </div>
+                        <Table
+                            headers={['Supplier', 'Amount', 'Remaining', 'Date']}
+                            data={todaysPayables}
+                        />
+                    </ShadowBox>
+                </div>
+            </div>
+
 
         </AuthenticatedLayout>
     );

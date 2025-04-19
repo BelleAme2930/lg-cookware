@@ -2,16 +2,16 @@
 
 namespace App\Modules\Profit;
 
+use App\Models\Sale;
 use App\Models\Expense;
-use App\Models\PurchaseItem;
-use App\Models\SaleItem;
+use App\Models\Purchase;
 
 class ProfitWidget
 {
     public function getProfitStats(): array
     {
-        $totalSales = SaleItem::sum('total_price');
-        $totalPurchases = PurchaseItem::sum('total_price');
+        $totalSales = Sale::sum('total_amount');
+        $totalPurchases = Purchase::sum('total_amount');
         $totalExpenses = Expense::sum('amount');
 
         $netProfit = $totalSales - $totalPurchases - $totalExpenses;

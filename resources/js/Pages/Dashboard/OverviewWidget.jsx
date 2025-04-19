@@ -20,8 +20,8 @@ export default function OverviewWidget({
 
     return (
         <ShadowBox className={`${className} overflow-hidden px-6`}>
-            <div className="py-4 text-gray-700">
-                <h2 className="text-2xl">{title}</h2>
+            <div className="py-2 text-gray-700">
+                <h2 className="text-xl mb-2">{title}</h2>
             </div>
 
             <div className={`${gradient} rounded-lg p-6 text-white`}>

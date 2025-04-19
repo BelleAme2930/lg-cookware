@@ -43,37 +43,41 @@ class DashboardController extends Controller
     public function index()
     {
 
-        $today = Carbon::today();
-
-        $todaysReceivablesQuery = Payment::whereDate('payment_date', $today)
-            ->whereHasMorph('payable', [Sale::class]);
-
-        $todaysPayablesQuery = Payment::whereDate('payment_date', $today)
-            ->whereHasMorph('payable', [Purchase::class]);
-
-        $customersWithPendingReceivables = Payment::where('remaining_balance', '>', 0)
-            ->whereHasMorph('payable', [Sale::class], function ($query) {
-                $query->select('customer_id');
-            })
-            ->get()
-            ->pluck('payable.customer_id')
-            ->unique()
-            ->count();
-
-        $suppliersWithPendingPayables = Payment::where('remaining_balance', '>', 0)
-            ->whereHasMorph('payable', [Purchase::class], function ($query) {
-                $query->select('supplier_id');
-            })
-            ->get()
-            ->pluck('payable.supplier_id')
-            ->unique()
-            ->count();
-
         $purchaseStats = $this->purchaseWidget->getPurchaseStats();
         $saleStats = $this->saleWidget->getSaleStats();
         $profitStats = $this->profitWidget->getProfitStats();
         $expenseStats = $this->expenseWidget->getExpenseStats();
         $quickStats = $this->quickStatsWidget->getQuickStats();
+
+        $today = Carbon::now('Asia/Karachi')->startOfDay();
+
+        $todaysReceivables = Payment::with('payable.customer')
+            ->where('due_date', $today)
+            ->whereHasMorph('payable', [Sale::class])
+            ->where('remaining_balance', '>', 0)
+            ->get()
+            ->map(function ($payment) {
+                return [
+                    'Customer' => $payment->payable->customer->name ?? '-',
+                    'Amount' => number_format($payment->amount) . ' Rs',
+                    'Remaining' => number_format($payment->remaining_balance) . ' Rs',
+                    'Date' => $payment->due_date->format('d M Y'),
+                ];
+            });
+
+        $todaysPayables = Payment::with('payable.supplier')
+            ->whereDate('due_date', $today)
+            ->whereHasMorph('payable', [Purchase::class])
+            ->where('remaining_balance', '>', 0)
+            ->get()
+            ->map(function ($payment) {
+                return [
+                    'Supplier' => $payment->payable->supplier->name ?? '-',
+                    'Amount' => number_format($payment->amount) . ' Rs',
+                    'Remaining' => number_format($payment->remaining_balance) . ' Rs',
+                    'Date' => $payment->due_date->format('d M Y'),
+                ];
+            });
 
 
         return Inertia::render('Dashboard', [
@@ -82,6 +86,8 @@ class DashboardController extends Controller
             'profitStats' => $profitStats,
             'expenseStats' => $expenseStats,
             'quickStats' => $quickStats,
+            'todaysReceivables' => $todaysReceivables,
+            'todaysPayables' => $todaysPayables,
         ]);
     }
 }

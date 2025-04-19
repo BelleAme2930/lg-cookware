@@ -6,8 +6,8 @@ export default function ExpenseWidget({ stats }) {
 
     return (
         <div className="bg-white shadow-md rounded-lg p-4">
-            <div className="py-4 text-gray-700">
-                <h2 className="text-2xl">Expenses</h2>
+            <div className="py-2 text-gray-700">
+                <h2 className="text-xl mb-2">Expenses</h2>
             </div>
             <div className="rounded-lg p-4 text-white bg-gradient-to-r from-blue-300 to-blue-500">
             <div className="flex items-center justify-between">
