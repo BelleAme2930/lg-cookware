@@ -5,7 +5,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import CustomDataTable from "@/Components/CustomDataTable.jsx";
 import Title from "@/Components/Title.jsx";
 import LinkButton from "@/Components/LinkButton.jsx";
-import {FaEye, FaPen, FaPlus, FaTrash} from "react-icons/fa";
+import {FaEye, FaFile, FaPen, FaPlus, FaTrash} from "react-icons/fa";
 import IconButton from "@/Components/IconButton.jsx";
 import {router} from "@inertiajs/react";
 import IconLink from "@/Components/IconLink.jsx";
@@ -31,7 +31,7 @@ const Index = ({suppliers}) => {
         {name: "ID", selector: (row) => row.id},
         {name: "Name", selector: (row) => row.name},
         {name: "Phone", selector: (row) => row.phone},
-        {name: "Current Balance", selector: (row) => row.current_balance + ' Rs.'},
+        {name: "Current Balance", selector: (row) => row.current_balance.toLocaleString() + ' Rs.'},
         {
             name: "Status",
             selector: (row) => <span
@@ -42,6 +42,7 @@ const Index = ({suppliers}) => {
             selector: (row) => (
                 <div className="flex items-center gap-2">
                     <IconLink icon={<FaEye/>} href={route("suppliers.show", row.id)}/>
+                    <IconLink icon={<FaFile/>} href={route("supplier.ledger.show", row.id)}/>
                     <IconLink icon={<FaPen/>} href={route("suppliers.edit", row.id)}/>
                     <IconButton icon={<FaTrash/>} onClick={() => handleDelete(row.id)}/>
                 </div>

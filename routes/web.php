@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierLedgerController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/purchases/filtered-purchase', [PurchaseController::class, 'filteredData'])->name('purchases.filteredData');
     Route::get('/sales/filtered-sale', [SaleController::class, 'filteredData'])->name('sales.filteredData');
+    Route::get('/suppliers/ledger', [SupplierLedgerController::class, 'index'])->name('supplier.ledger.index');
+    Route::get('suppliers/{supplier}/ledger', [SupplierLedgerController::class, 'show'])->name('supplier.ledger.show');
 
     Route::resources([
         'categories' => CategoryController::class,

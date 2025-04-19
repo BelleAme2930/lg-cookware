@@ -65,6 +65,18 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Purchases
                                 </NavLink>
+                                <NavLink
+                                    href={route('sales.index')}
+                                    active={route().current('sales.index')}
+                                >
+                                    Sales
+                                </NavLink>
+                                <NavLink
+                                    href={route('supplier.ledger.index')}
+                                    active={route().current('supplier.ledger.index')}
+                                >
+                                    Purchase Ledgers
+                                </NavLink>
                             </div>
                         </div>
                     </div>

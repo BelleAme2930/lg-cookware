@@ -110,6 +110,10 @@ class PurchaseController extends Controller
                 throw new \Exception('Total payment amount exceeds purchase total.');
             }
 
+            $supplier = Supplier::find($request->supplier);
+            $supplier->current_balance += ($request->total_amount - $totalPaymentAmount);
+            $supplier->save();
+
             DB::commit();
             return redirect()->route('purchases.index')
                 ->with('success', 'Purchase created successfully');
@@ -160,6 +164,12 @@ class PurchaseController extends Controller
         DB::beginTransaction();
 
         try {
+            $oldTotal = $purchase->getOriginal('total_amount');
+            $oldPayments = $purchase->payments()->sum('amount');
+            $supplier = Supplier::find($purchase->supplier_id);
+
+            $supplier->current_balance -= ($oldTotal - $oldPayments);
+
             $purchase->update([
                 'supplier_id' => $request->supplier,
                 'purchase_date' => $request->purchase_date,
@@ -179,12 +189,17 @@ class PurchaseController extends Controller
                         'quantity' => $sizeData['quantity'],
                         'unit_price' => $sizeData['price'],
                         'weight' => $product->type === ProductTypeEnum::Weight ? WeightHelper::toGrams($sizeData['weight']) : null,
-                        'total_price' => $request->total_amount,
+                        'total_price' => $product->type === ProductTypeEnum::Weight
+                            ? $sizeData['weight'] * $sizeData['price']
+                            : $sizeData['quantity'] * $sizeData['price'],
                     ]);
                 }
             }
 
             $purchase->payments()->delete();
+
+            $newPaymentsTotal = 0;
+
             foreach ($request->payments as $paymentData) {
                 $purchase->payments()->create([
                     'method' => $paymentData['method'],
@@ -197,7 +212,16 @@ class PurchaseController extends Controller
                     'cheque_number' => $paymentData['cheque_number'] ?? null,
                     'bank_name' => $paymentData['bank_name'] ?? null,
                 ]);
+
+                $newPaymentsTotal += $paymentData['amount'];
             }
+
+            if ($newPaymentsTotal > $request->total_amount) {
+                throw new \Exception('Total payment amount exceeds purchase total.');
+            }
+
+            $supplier->current_balance += ($request->total_amount - $newPaymentsTotal);
+            $supplier->save();
 
             DB::commit();
             return redirect()->route('purchases.index')
@@ -205,7 +229,7 @@ class PurchaseController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('purchases.index')
-                ->with('error', 'Error occurred while updating purchase');
+                ->with('error', 'Error occurred while updating purchase: ' . $e->getMessage());
         }
     }
 
@@ -227,10 +251,15 @@ class PurchaseController extends Controller
         DB::beginTransaction();
 
         try {
+            $supplier = $purchase->supplier;
+            $totalAmount = $purchase->total_amount;
+            $totalPaid = $purchase->payments()->sum('amount');
+
+            $supplier->current_balance -= ($totalAmount - $totalPaid);
+            $supplier->save();
+
             $purchase->items()->delete();
-
             $purchase->payments()->delete();
-
             $purchase->delete();
 
             DB::commit();
@@ -242,6 +271,7 @@ class PurchaseController extends Controller
                 ->with('error', 'Error occurred while deleting purchase: ' . $e->getMessage());
         }
     }
+
 
     public function filteredData(Request $request)
     {
