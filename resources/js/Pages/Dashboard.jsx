@@ -108,9 +108,9 @@ export default function Dashboard({
                             className='w-1/2'
                             title="Pending Payments"
                             value={`${quickStats.pendingPayments.toLocaleString()} Rs.`}
-                            icon={<FaMoneyCheckAlt className='text-2xl text-emerald-800'/>}
-                            background='bg-emerald-300'
-                            color='text-emerald-900'
+                            icon={<FaMoneyCheckAlt className='text-2xl text-cyan-800'/>}
+                            background='bg-cyan-300'
+                            color='text-cyan-900'
                         />
                     </div>
                 </ShadowBox>
