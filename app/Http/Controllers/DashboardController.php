@@ -11,6 +11,7 @@ use App\Models\Supplier;
 use App\Modules\Expense\ExpenseWidget;
 use App\Modules\Profit\ProfitWidget;
 use App\Modules\Purchase\PurchaseWidget;
+use App\Modules\QuickStats\QuickStatsWidget;
 use App\Modules\Sale\SaleWidget;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -21,18 +22,22 @@ class DashboardController extends Controller
     protected SaleWidget $saleWidget;
     protected ProfitWidget $profitWidget;
     protected ExpenseWidget $expenseWidget;
+    protected QuickStatsWidget $quickStatsWidget;
+
 
     public function __construct(
         PurchaseWidget $purchaseWidget,
         SaleWidget $saleWidget,
         ProfitWidget $profitWidget,
         ExpenseWidget $expenseWidget,
+        QuickStatsWidget $quickStatsWidget,
     )
     {
         $this->purchaseWidget = $purchaseWidget;
         $this->saleWidget = $saleWidget;
         $this->profitWidget = $profitWidget;
         $this->expenseWidget = $expenseWidget;
+        $this->quickStatsWidget = $quickStatsWidget;
     }
 
     public function index()
@@ -64,40 +69,11 @@ class DashboardController extends Controller
             ->unique()
             ->count();
 
-
-
         $purchaseStats = $this->purchaseWidget->getPurchaseStats();
         $saleStats = $this->saleWidget->getSaleStats();
         $profitStats = $this->profitWidget->getProfitStats();
         $expenseStats = $this->expenseWidget->getExpenseStats();
-        $quickStats = [
-            'customers' => Customer::count(),
-            'products' => Product::count(),
-            'suppliers' => Supplier::count(),
-            'pendingPayments' => number_format(Payment::where('remaining_balance', '>', 0)->sum('remaining_balance')),
-            'totalSales' => Sale::count(),
-            'totalPurchases' => Purchase::count(),
-            'todaysReceivables' => [
-                'count' => $todaysReceivablesQuery->count(),
-                'amount' => $todaysReceivablesQuery->sum('amount'),
-                'uniqueCustomers' => Payment::whereDate('payment_date', $today)
-                    ->whereHasMorph('payable', [Sale::class])
-                    ->get()
-                    ->pluck('payable.customer_id')
-                    ->unique()
-                    ->count(),
-            ],
-            'todaysPayables' => [
-                'count' => $todaysPayablesQuery->count(),
-                'amount' => $todaysPayablesQuery->sum('amount'),
-                'uniqueSuppliers' => Payment::whereDate('payment_date', $today)
-                    ->whereHasMorph('payable', [Purchase::class])
-                    ->get()
-                    ->pluck('payable.supplier_id')
-                    ->unique()
-                    ->count(),
-            ],
-        ];
+        $quickStats = $this->quickStatsWidget->getQuickStats();
 
 
         return Inertia::render('Dashboard', [
