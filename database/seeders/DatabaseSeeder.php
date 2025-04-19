@@ -21,5 +21,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'umairsaif.pk@gmail.com',
             'password' => Hash::make('password'),
         ]);
+
+        User::factory()->create([
+            'name' => 'Bilal Shafique',
+            'email' => 'bilal@lgcookware.com',
+            'password' => Hash::make('bilal.786'),
+        ]);
     }
 }
