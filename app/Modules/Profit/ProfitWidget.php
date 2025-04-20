@@ -2,24 +2,39 @@
 
 namespace App\Modules\Profit;
 
-use App\Models\Sale;
 use App\Models\Expense;
-use App\Models\Purchase;
+use App\Models\SaleItem;
 
 class ProfitWidget
 {
     public function getProfitStats(): array
     {
-        $totalSales = Sale::sum('total_amount');
-        $totalPurchases = Purchase::sum('total_amount');
-        $totalExpenses = Expense::sum('amount');
+        $totalProfit = 0;
 
-        $netProfit = $totalSales - $totalPurchases - $totalExpenses;
+        // Fetch all sold items
+        $soldItems = SaleItem::with(['productSize'])->get();
+
+        foreach ($soldItems as $item) {
+            $productSize = $item->productSize;
+
+            if ($productSize) {
+                $salePrice = $productSize->sale_price;
+                $purchasePrice = $productSize->purchase_price;
+
+                $quantity = $item->quantity;
+                $profitPerUnit = $salePrice - $purchasePrice;
+
+                $totalProfit += $profitPerUnit * $quantity;
+            }
+        }
+
+        // Subtract expenses
+        $totalExpenses = Expense::sum('amount');
+        $netProfit = $totalProfit - $totalExpenses;
 
         return [
             'value' => $netProfit,
-            'totalSales' => number_format($totalSales),
-            'totalPurchases' => number_format($totalPurchases),
+            'totalProfitFromSales' => number_format($totalProfit),
             'totalExpenses' => number_format($totalExpenses),
         ];
     }
