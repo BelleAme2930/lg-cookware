@@ -16,10 +16,10 @@ class QuickStatsWidget
     {
         $today = Carbon::now('Asia/Karachi')->startOfDay();
 
-        $todaysReceivablesQuery = Payment::whereDate('payment_date', $today)
+        $todaysReceivablesQuery = Payment::whereDate('due_date', $today)
             ->whereHasMorph('payable', [Sale::class]);
 
-        $todaysPayablesQuery = Payment::whereDate('payment_date', $today)
+        $todaysPayablesQuery = Payment::whereDate('due_date', $today)
             ->whereHasMorph('payable', [Purchase::class]);
 
         return [
@@ -32,7 +32,7 @@ class QuickStatsWidget
             'todaysReceivables' => [
                 'count' => $todaysReceivablesQuery->count(),
                 'amount' => $todaysReceivablesQuery->sum('amount'),
-                'uniqueCustomers' => Payment::whereDate('payment_date', $today)
+                'uniqueCustomers' => Payment::whereDate('due_date', $today)
                     ->whereHasMorph('payable', [Sale::class])
                     ->get()
                     ->pluck('payable.customer_id')
@@ -42,7 +42,7 @@ class QuickStatsWidget
             'todaysPayables' => [
                 'count' => $todaysPayablesQuery->count(),
                 'amount' => $todaysPayablesQuery->sum('amount'),
-                'uniqueSuppliers' => Payment::whereDate('payment_date', $today)
+                'uniqueSuppliers' => Payment::whereDate('due_date', $today)
                     ->whereHasMorph('payable', [Purchase::class])
                     ->get()
                     ->pluck('payable.supplier_id')
