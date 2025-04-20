@@ -14,7 +14,7 @@ class QuickStatsWidget
 {
     public function getQuickStats(): array
     {
-        $today = Carbon::today();
+        $today = Carbon::now('Asia/Karachi')->startOfDay();
 
         $todaysReceivablesQuery = Payment::whereDate('payment_date', $today)
             ->whereHasMorph('payable', [Sale::class]);
