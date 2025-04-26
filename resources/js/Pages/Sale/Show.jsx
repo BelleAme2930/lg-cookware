@@ -54,7 +54,7 @@ const Show = ({sale}) => {
                 </ShadowBox>
 
                 <ShadowBox className='w-full md:w-1/3' title='Customer & Products'>
-                    <LabelValue title='Customer'>{sale.customer.name}</LabelValue>
+                    <LabelValue title='Customer'>{sale?.customer?.name}</LabelValue>
                     <LabelValue title='Products' lastRow={true}>{sale.item_names}</LabelValue>
                 </ShadowBox>
 
