@@ -12,7 +12,7 @@ const PurchaseDetails = ({ purchase }) => {
         const productName = product_size?.product?.name ?? '-';
         const sizeName = product_size?.name ?? '-';
 
-        if (product_size.product.type === 'quantity') {
+        if (product_size?.product?.type === 'quantity') {
             quantityItems.push({
                 product: productName,
                 size: sizeName,
