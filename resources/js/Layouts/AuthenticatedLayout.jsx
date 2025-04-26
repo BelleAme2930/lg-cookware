@@ -1,8 +1,11 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import NavLink from '@/Components/NavLink';
-import { Link } from '@inertiajs/react';
+import {Link} from '@inertiajs/react';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
-export default function AuthenticatedLayout({ header, children }) {
+
+export default function AuthenticatedLayout({header, children}) {
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -12,7 +15,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <ApplicationLogo />
+                                    <ApplicationLogo/>
                                 </Link>
                             </div>
 
@@ -83,6 +86,44 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Customer Ledgers
                                 </NavLink>
+                                <div className="flex items-center">
+                                    <button
+                                        onClick={() => {
+                                            Swal.fire({
+                                                title: 'Reset Database?',
+                                                text: 'This will delete all data and reseed. Confirm your password to proceed.',
+                                                icon: 'warning',
+                                                input: 'password',
+                                                inputPlaceholder: 'Enter your password',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#d33',
+                                                cancelButtonColor: '#3085d6',
+                                                confirmButtonText: 'Yes, reset it!',
+                                                preConfirm: (password) => {
+                                                    if (!password) {
+                                                        Swal.showValidationMessage('Password is required');
+                                                    }
+                                                    return password;
+                                                }
+                                            }).then((result) => {
+                                                if (result.isConfirmed && result.value) {
+                                                    axios.post(route('testing.reset-db'), {password: result.value})
+                                                        .then(response => {
+                                                            Swal.fire('Success', response.data.message, 'success').then(() => {
+                                                                window.location.reload();
+                                                            });
+                                                        })
+                                                        .catch(error => {
+                                                            Swal.fire('Error', error.response?.data?.message || 'Something went wrong.', 'error');
+                                                        });
+                                                }
+                                            });
+                                        }}
+                                        className="rounded bg-red-600 p-2 text-white hover:bg-red-700"
+                                    >
+                                        Reset DB
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
