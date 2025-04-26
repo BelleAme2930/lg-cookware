@@ -27,7 +27,7 @@ class SaleResource extends JsonResource
             'items' => $this->whenLoaded('items', fn() => SaleItemResource::collection($this->items)),
             'item_names' => $this->whenLoaded('items', function () {
                 return $this->items->map(function ($item) {
-                    return $item->productSize->product->name . ' ' . $item->productSize->name;
+                    return $item?->productSize?->product?->name . ' ' . $item?->productSize?->name;
                 })->implode(', ');
             }),
             'payments' => $this->whenLoaded('payments', fn() => PaymentResource::collection($this->payments)),
