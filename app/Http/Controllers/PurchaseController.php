@@ -120,7 +120,8 @@ class PurchaseController extends Controller
             }
 
             $supplier = Supplier::find($request->supplier);
-            $supplier->current_balance += ($request->total_amount - $totalPaymentAmount);
+            $unpaidAmount = $request->total_amount - $totalPaymentAmount;
+            $supplier->current_balance -= $unpaidAmount;
             $supplier->save();
 
             DB::commit();
@@ -177,7 +178,8 @@ class PurchaseController extends Controller
             $oldPayments = $purchase->payments()->sum('amount');
             $supplier = Supplier::find($purchase->supplier_id);
 
-            $supplier->current_balance -= ($oldTotal - $oldPayments);
+            $oldUnpaidAmount = $oldTotal - $oldPayments;
+            $supplier->current_balance += $oldUnpaidAmount;
 
             $purchase->update([
                 'supplier_id' => $request->supplier,
@@ -238,7 +240,8 @@ class PurchaseController extends Controller
                 throw new \Exception('Total payment amount exceeds purchase total.');
             }
 
-            $supplier->current_balance += ($request->total_amount - $newPaymentsTotal);
+            $newUnpaidAmount = $request->total_amount - $newPaymentsTotal;
+            $supplier->current_balance -= $newUnpaidAmount;
             $supplier->save();
 
             DB::commit();
@@ -273,7 +276,8 @@ class PurchaseController extends Controller
             $totalAmount = $purchase->total_amount;
             $totalPaid = $purchase->payments()->sum('amount');
 
-            $supplier->current_balance -= ($totalAmount - $totalPaid);
+            $unpaidAmount = $totalAmount - $totalPaid;
+            $supplier->current_balance += $unpaidAmount;
             $supplier->save();
 
             $purchase->items()->delete();

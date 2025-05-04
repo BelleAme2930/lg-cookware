@@ -31,7 +31,7 @@ const Index = ({suppliers}) => {
         {name: "ID", selector: (row) => row.id},
         {name: "Name", selector: (row) => row.name},
         {name: "Phone", selector: (row) => row.phone},
-        {name: "Current Balance", selector: (row) => row.current_balance.toLocaleString() + ' Rs.'},
+        {name: "Current Balance", selector: (row) => row.current_balance < 0 ? `${Math.abs(row.current_balance)} Rs. (Credit)` : `${row.current_balance} Rs. (Debit)`},
         {
             name: "Status",
             selector: (row) => <span

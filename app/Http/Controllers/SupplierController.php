@@ -34,12 +34,16 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $request)
     {
+        $openingBalance = $request->balance_type === 'credit'
+            ? -abs($request->opening_balance)
+            : abs($request->opening_balance);
+
         Supplier::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-            'opening_balance' => $request->opening_balance,
+            'opening_balance' => $openingBalance,
             'current_balance' => $request->opening_balance,
             'status' => true,
         ]);
@@ -72,11 +76,19 @@ class SupplierController extends Controller
      */
     public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
+        $openingBalance = $request->balance_type === 'credit'
+            ? -abs($request->opening_balance)
+            : abs($request->opening_balance);
+
+        $balanceDifference = $openingBalance - $supplier->opening_balance;
+
         $supplier->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
+            'opening_balance' => $openingBalance,
+            'current_balance' => $supplier->current_balance + $balanceDifference,
             'status' => $request->status,
         ]);
 

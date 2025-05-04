@@ -14,16 +14,30 @@ const SupplierForm = ({supplier = null}) => {
         email: supplier?.email ?? '',
         phone: supplier?.phone ?? '',
         address: supplier?.address ?? '',
-        opening_balance: supplier?.opening_balance ?? 0,
+        opening_balance: supplier?.opening_balance ? Math.abs(supplier.opening_balance) : 0,
+        balance_type: supplier?.opening_balance >= 0 ? 'debit' : 'credit',
         status: supplier?.status !== 0,
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        supplier ? patch(route('suppliers.update', supplier), {
+
+        // Calculate the actual balance value based on the balance type
+        const calculatedOpeningBalance =
+            data.balance_type === 'credit'
+                ? -Math.abs(data.opening_balance)
+                : Math.abs(data.opening_balance);
+
+        const formData = {
+            ...data,
+            opening_balance: calculatedOpeningBalance,
+        };
+
+        supplier
+            ? patch(route('suppliers.update', supplier), formData, {
                 onSuccess: () => reset()
-            }) :
-            post(route('suppliers.store'), {
+            })
+            : post(route('suppliers.store'), formData, {
                 onSuccess: () => reset()
             });
     };
@@ -71,18 +85,82 @@ const SupplierForm = ({supplier = null}) => {
                     <InputError message={errors.address}/>
                 </div>
                 {!supplier ? (
-                    <div className='mb-2'>
-                        <InputLabel>Opening Balance:</InputLabel>
-                        <TextInput
-                            type="number"
-                            value={data.opening_balance}
-                            onChange={(e) => setData('opening_balance', e.target.value)}
-                            placeholder="Enter opening balance"
-                        />
-                        <InputError message={errors.opening_balance}/>
+                    <div className='mb-4'>
+                        <div className='flex gap-4'>
+                            <div className='flex-1'>
+                                <InputLabel>Opening Balance:</InputLabel>
+                                <TextInput
+                                    type="number"
+                                    value={data.opening_balance}
+                                    onChange={(e) => setData('opening_balance', e.target.value)}
+                                    placeholder="Enter opening balance"
+                                    min="0"
+                                />
+                                <InputError message={errors.opening_balance}/>
+                            </div>
+                            <div className='w-64'>
+                                <InputLabel>Balance Type:</InputLabel>
+                                <InputSelect
+                                    id="balance_type"
+                                    options={[
+                                        {label: 'Debit (Supplier Owes)', value: 'debit'},
+                                        {label: 'Credit (We Owe)', value: 'credit'},
+                                    ]}
+                                    value={data.balance_type}
+                                    onChange={(option) => setData('balance_type', option ? option.value : 'debit')}
+                                    error={!!errors.balance_type}
+                                    required={true}
+                                    errorMsg={errors.balance_type}
+                                    className="w-full"
+                                />
+                                <InputError message={errors.balance_type}/>
+                            </div>
+                        </div>
+                        <p className='text-sm text-gray-500 mt-1'>
+                            {data.balance_type === 'debit'
+                                ? 'Debit: Supplier owes you money'
+                                : 'Credit: You owe supplier money (advance payment)'}
+                        </p>
                     </div>
                 ) : (
                     <>
+                        <div className='mb-4'>
+                            <div className='flex gap-4'>
+                                <div className='flex-1'>
+                                    <InputLabel>Opening Balance:</InputLabel>
+                                    <TextInput
+                                        type="number"
+                                        value={data.opening_balance}
+                                        onChange={(e) => setData('opening_balance', e.target.value)}
+                                        placeholder="Enter opening balance"
+                                        min="0"
+                                    />
+                                    <InputError message={errors.opening_balance}/>
+                                </div>
+                                <div className='w-40'>
+                                    <InputLabel>Balance Type:</InputLabel>
+                                    <InputSelect
+                                        id="balance_type"
+                                        options={[
+                                            {label: 'Debit (Supplier Owes)', value: 'debit'},
+                                            {label: 'Credit (We Owe)', value: 'credit'},
+                                        ]}
+                                        value={data.balance_type}
+                                        onChange={(option) => setData('balance_type', option ? option.value : 'debit')}
+                                        error={!!errors.balance_type}
+                                        required={true}
+                                        errorMsg={errors.balance_type}
+                                        className="w-full"
+                                    />
+                                    <InputError message={errors.balance_type}/>
+                                </div>
+                            </div>
+                            <p className='text-sm text-gray-500 mt-1'>
+                                {data.balance_type === 'debit'
+                                    ? 'Debit: Supplier owes you money'
+                                    : 'Credit: You owe supplier money (advance payment)'}
+                            </p>
+                        </div>
                         <div className='mb-2'>
                             <InputSelect
                                 id="status"
@@ -114,4 +192,3 @@ const SupplierForm = ({supplier = null}) => {
 };
 
 export default SupplierForm;
-
