@@ -34,13 +34,17 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
+        $openingBalance = $request->balance_type === 'credit'
+            ? -abs($request->opening_balance)
+            : abs($request->opening_balance);
+
         Customer::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-            'opening_balance' => $request->opening_balance,
-            'current_balance' => $request->opening_balance,
+            'opening_balance' => $openingBalance,
+            'current_balance' => $openingBalance,
             'status' => true,
         ]);
 
@@ -72,11 +76,19 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
+        $openingBalance = $request->balance_type === 'credit'
+            ? -abs($request->opening_balance)
+            : abs($request->opening_balance);
+
+        $balanceDifference = $openingBalance - $customer->opening_balance;
+
         $customer->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
+            'opening_balance' => $openingBalance,
+            'current_balance' => $customer->current_balance + $balanceDifference,
             'status' => $request->status,
         ]);
 

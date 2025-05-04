@@ -26,7 +26,8 @@ class StoreCustomerRequest extends FormRequest
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
-            'opening_balance' => ['required', 'numeric'],
+            'opening_balance' => ['required', 'numeric', 'min:0'],
+            'balance_type' => ['required', 'in:debit,credit'],
             'current_balance' => ['nullable', 'numeric'],
             'status' => ['nullable', 'boolean'],
         ];

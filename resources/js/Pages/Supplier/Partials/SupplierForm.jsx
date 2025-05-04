@@ -137,7 +137,7 @@ const SupplierForm = ({supplier = null}) => {
                                     />
                                     <InputError message={errors.opening_balance}/>
                                 </div>
-                                <div className='w-40'>
+                                <div className='w-64'>
                                     <InputLabel>Balance Type:</InputLabel>
                                     <InputSelect
                                         id="balance_type"

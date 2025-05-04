@@ -31,8 +31,16 @@ const Show = ({customer}) => {
                     <LabelValue title='Email'>{customer.email}</LabelValue>
                     <LabelValue title='Phone'>{customer.phone}</LabelValue>
                     <LabelValue title='Address'>{customer.address}</LabelValue>
-                    <LabelValue title='Opening Balance'>{customer.opening_balance} Rs.</LabelValue>
-                    <LabelValue title='Current Balance'>{customer.current_balance} Rs.</LabelValue>
+                    <LabelValue title='Opening Balance'>
+                        {customer.opening_balance < 0
+                            ? `${Math.abs(customer.opening_balance)} Rs. (Credit)`
+                            : `${customer.opening_balance} Rs. (Debit)`}
+                    </LabelValue>
+                    <LabelValue title='Current Balance'>
+                        {customer.current_balance < 0
+                            ? `${Math.abs(customer.current_balance)} Rs. (Credit)`
+                            : `${customer.current_balance} Rs. (Debit)`}
+                    </LabelValue>
                     <LabelValue title='Created Date'>{customer.created_at}</LabelValue>
                     <LabelValue title='Status' lastRow={true}>
                         <span

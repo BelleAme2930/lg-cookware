@@ -44,7 +44,7 @@ class SupplierController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'opening_balance' => $openingBalance,
-            'current_balance' => $request->opening_balance,
+            'current_balance' => $openingBalance,
             'status' => true,
         ]);
 
