@@ -47,8 +47,9 @@ const PurchaseDetails = ({ purchase }) => {
     const weightItems = Object.values(groupedItems).map(group => {
         let calculatedTotalPrice = 0;
         group.sizes.forEach(size => {
-            calculatedTotalPrice += size.weight * size.unit_price;
+            calculatedTotalPrice += size.weight * size.unitPrice;
         });
+        console.log(group, 'group')
 
         return {
             product: group.product,
@@ -62,7 +63,7 @@ const PurchaseDetails = ({ purchase }) => {
             </div>,
             quantity: `${group.totalQuantity} Pcs.`,
             weight: `${group.weight.toFixed(2)} KG`,
-            unit_price: `${group.sizes[0].unit_price} Rs.`,
+            unit_price: `${group.sizes[0].unitPrice} Rs.`,
             total_price: `${calculatedTotalPrice.toLocaleString()} Rs.`
         };
     });
