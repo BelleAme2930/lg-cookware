@@ -36,7 +36,7 @@ const SaleDetails = ({ sale }) => {
                 name: sizeName,
                 quantity: item.quantity,
                 weight: parseFloat(item.weight || 0),
-                unitPrice: parseFloat(item.unit_price_display || 0)
+                unitPrice: parseFloat(item.unit_price || 0)
             });
             groupedItems[productName].totalQuantity += item.quantity;
             groupedItems[productName].weight += item.weight || 0;
