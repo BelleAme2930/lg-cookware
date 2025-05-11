@@ -2,6 +2,7 @@ import React from 'react';
 import Table from "@/Components/Table.jsx";
 
 const PurchaseDetails = ({ purchase }) => {
+    console.log(purchase, 'purchase')
     const headers = ["Product", "Size", "Quantity", "Weight", "Unit Price", "Total Price"];
 
     const groupedItems = {};
