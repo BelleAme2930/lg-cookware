@@ -49,7 +49,7 @@ const PurchaseDetails = ({ purchase }) => {
         group.sizes.forEach(size => {
             calculatedTotalPrice += size.weight * size.unitPrice;
         });
-        console.log(group, 'group')
+        console.log(groupedItems, 'groupedItems')
 
         return {
             product: group.product,
