@@ -13,6 +13,7 @@ const PurchaseDetails = ({ purchase }) => {
         const sizeName = product_size?.name ?? '-';
 
         if (product_size?.product?.type === 'quantity') {
+            // Handle quantity-based products
             quantityItems.push({
                 product: productName,
                 size: sizeName,
@@ -22,57 +23,63 @@ const PurchaseDetails = ({ purchase }) => {
                 total_price: `${item.total_price} Rs.`
             });
         } else {
-            if (!groupedItems[productName]) {
-                groupedItems[productName] = {
+            const key = `${productName}`;
+            if (!groupedItems[key]) {
+                groupedItems[key] = {
                     product: productName,
                     sizes: [],
                     totalQuantity: 0,
-                    weight: 0,
-                    totalPrice: 0,
+                    totalWeight: 0,
+                    unitPrice: parseFloat(item.unit_price_display || 1)
                 };
             }
 
-            groupedItems[productName].sizes.push({
+            groupedItems[key].sizes.push({
                 name: sizeName,
-                quantity: item.quantity,
-                weight: parseFloat(item.weight || 0),
-                unitPrice: parseFloat(item.unit_price_display || 0)
+                quantity: item.quantity
             });
-            groupedItems[productName].totalQuantity += item.quantity;
-            groupedItems[productName].weight += item.weight || 0;
+
+            groupedItems[key].totalQuantity += parseInt(item.quantity || 0);
+
+            const weightInKg = parseFloat(item.weight || 0);
+            groupedItems[key].totalWeight += weightInKg;
         }
     });
 
     const weightItems = Object.values(groupedItems).map(group => {
-        let calculatedTotalPrice = 0;
-        group.sizes.forEach(size => {
-            calculatedTotalPrice += size.weight * size.unitPrice;
-        });
-
-        return {
-            product: group.product,
-            size: <div className="flex justify-center gap-3">
+        // Format size display
+        const sizeDisplay = (
+            <div className="flex justify-center gap-3">
                 {group.sizes.map((size, index) => (
-                    <div key={index}>
+                    <div key={index} className="text-center">
                         <div className="border-b border-black">{size.name}</div>
                         <div>{size.quantity}</div>
                     </div>
                 ))}
-            </div>,
+            </div>
+        );
+
+        const totalPrice = group.totalWeight * group.unitPrice;
+
+        return {
+            product: group.product,
+            size: sizeDisplay,
             quantity: `${group.totalQuantity} Pcs.`,
-            weight: `${group.weight.toFixed(2)} KG`,
-            unit_price: `${group.sizes[0].unitPrice} Rs.`,
-            total_price: `${calculatedTotalPrice.toLocaleString()} Rs.`
+            weight: `${group.totalWeight.toFixed(2)} KG`,
+            unit_price: `${group.unitPrice} Rs.`,
+            total_price: `${Math.round(totalPrice).toLocaleString()} Rs.`
         };
     });
 
-    const data = [...quantityItems, ...weightItems];
+    const data = [...weightItems, ...quantityItems];
 
     return (
-        <Table
-            headers={headers}
-            data={data}
-        />
+        <div>
+            <Table headers={headers} data={data} />
+            <div className="text-right mt-4 font-bold">
+                Total Price: {purchase.total_amount?.toLocaleString()} Rs.
+            </div>
+        </div>
     );
 };
 
